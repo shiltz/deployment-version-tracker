@@ -46,6 +46,6 @@ def process(country) {
     historyFile.write(jsonOutput)
 }
 
-def call(){
-    process("SA")
+def call(String country){
+    process(country)
 }
