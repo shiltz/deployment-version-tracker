@@ -42,7 +42,7 @@ def process(country) {
 
     def jsonOutput = JsonOutput.toJson(new DeploymentConfiguration(countryDeploymentStatsModel))
 //    println jsonOutput
-    def historyFile = new File("output.json");
+    def historyFile = new File("../jenkins/output.json");
     historyFile.write(jsonOutput)
 }
 
