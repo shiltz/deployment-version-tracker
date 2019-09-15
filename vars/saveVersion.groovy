@@ -54,12 +54,18 @@ class CountryDeploymentStatsModel {
 
 Country getCountry(String environmentName, String countryName, DeploymentConfiguration configuration){
   Environment environment1;
-  for(Environment environment : configuration.environments){
-    if(environment.name.equals(environmentName)){
-      environment1 = environment;
-      break;
-    }
-  }
+  configuration.environments.each{ key, value -> 
+  		if(value.name.equals(environmentName)){
+  		  environment1 = environment;
+	 	}
+	}
+  //Environment environment1;
+  //for(Environment environment : configuration.environments){
+  //  if(environment.name.equals(environmentName)){
+  //    environment1 = environment;
+  //    break;
+  //  }
+ // }
   //if(environment1 != null){
 //    for(Country country : environment.countries){
 //      if(country.name.equals(countryName)){
