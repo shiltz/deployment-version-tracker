@@ -53,8 +53,23 @@ class CountryDeploymentStatsModel {
 }
 
 Country getCountry(String environmentName, String countryName, DeploymentConfiguration configuration){
-  Optional<Environment> environment1 = configuration.environments.stream().filter({environment -> environment.name.equals(environmentName)}).findFirst()
-  return environment1.orElse(new Environment(environmentName)).countries.stream().filter({country -> country.name.equals(countryName)}).findFirst().orElse(new Country(countryName, new ArrayList<>()))
+  Environment environment1 = null;
+  for(Environment environment : configuration.environments){
+    if(environment.name.equals(environmentName)){
+      environment1 = environment;
+      break;
+    }
+  }
+  if(environment1 != null){
+    for(Country country : environment.countries){
+      if(country.name.equals(countryName)){
+          return country;
+      } 
+    }
+    return new Country(countryName, new ArrayList<>());
+  } else {
+    return new Country(countryName, new ArrayList<>());
+  }
 }
 
 DeploymentConfiguration readDeploymentConfiguration(filename) {
