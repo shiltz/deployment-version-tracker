@@ -96,6 +96,6 @@ def process(String country, String env) {
 }
 
 
-def call(country, env){
-    process(country, env)
+def call(String country){
+    process(country, 'SIT')
 }
