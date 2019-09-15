@@ -3,14 +3,14 @@ package io.jenkins.plugin.deploy.statistics.model;
 import java.util.*;
 
 public class DeploymentConfiguration {
-    private List<CountryDeploymentStats> countryDeploymentStats;
 
-    public void setCountryDeploymentStats(List<CountryDeploymentStats> countryDeploymentStats) {
-        this.countryDeploymentStats = countryDeploymentStats;
+    private List<Environment> environments;
+
+    public List<Environment> getEnvironments() {
+        return environments;
     }
 
-    public List<CountryDeploymentStats> getCountryDeploymentStats() {
-        return countryDeploymentStats;
+    public void setEnvironments(List<Environment> environments) {
+        this.environments = environments;
     }
-
 }

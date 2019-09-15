@@ -1,68 +1,47 @@
 package io.jenkins.plugin.deploy.statistics.model;
 
-public class CountryDeploymentStats {
-    private String previousArtifactVersion;
-    private String previousDeploymentDate;
-    private String previousDeploymentStatus;
-    private String currentArtifactVersion;
-    private String currentDeploymentDate;
-    private String currentDeploymentStatus;
-    private String country;
+import java.util.*;
 
-    public String getPreviousArtifactVersion() {
-        return previousArtifactVersion != null ? previousArtifactVersion : "-";
+public class CountryDeploymentStats implements Comparable<CountryDeploymentStats> {
+    private String artifactVersion;
+    private String commit;
+    private String status;
+    private Date date;
+
+    public String getArtifactVersion() {
+        return artifactVersion != null ? this.artifactVersion : "-";
     }
 
-    public String getCurrentArtifactVersion() {
-        return currentArtifactVersion != null ? currentArtifactVersion : "-";
+    public void setArtifactVersion(String artifactVersion) {
+        this.artifactVersion = artifactVersion;
     }
 
-    public String getCountry() {
-        return country != null ? country : "-";
+    public String getCommit() {
+        return commit  != null ? this.commit : "-";
     }
 
-    public void setPreviousArtifactVersion(String previousArtifactVersion) {
-        this.previousArtifactVersion = previousArtifactVersion;
+    public void setCommit(String commit) {
+        this.commit = commit;
     }
 
-    public void setCurrentArtifactVersion(String currentArtifactVersion) {
-        this.currentArtifactVersion = currentArtifactVersion;
+    public String getStatus() {
+        return status  != null ? this.status : "-";
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-
-    public String getPreviousDeploymentStatus() {
-        return previousDeploymentStatus != null ? previousDeploymentStatus : "-";
+    public Date getDate() {
+        return this.date;
     }
 
-    public void setPreviousDeploymentStatus(String previousDeploymentStatus) {
-        this.previousDeploymentStatus = previousDeploymentStatus;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getPreviousDeploymentDate() {
-        return previousDeploymentDate != null ? previousDeploymentDate : "-";
-    }
-
-    public void setPreviousDeploymentDate(String previousDeploymentDate) {
-        this.previousDeploymentDate = previousDeploymentDate;
-    }
-
-    public String getCurrentDeploymentDate() {
-        return currentDeploymentDate != null ? currentDeploymentDate : "-";
-    }
-
-    public void setCurrentDeploymentDate(String currentDeploymentDate) {
-        this.currentDeploymentDate = currentDeploymentDate;
-    }
-
-    public String getCurrentDeploymentStatus() {
-        return currentDeploymentStatus != null ? currentDeploymentStatus : "-";
-    }
-
-    public void setCurrentDeploymentStatus(String currentDeploymentStatus) {
-        this.currentDeploymentStatus = currentDeploymentStatus;
+    @Override
+    public int compareTo(CountryDeploymentStats o) {
+        return this.date.compareTo(o.date);
     }
 }

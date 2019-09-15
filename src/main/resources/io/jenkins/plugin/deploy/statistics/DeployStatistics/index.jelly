@@ -1,7 +1,8 @@
-<?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
-<link rel="stylesheet" href="style.css" />
+<?jelly?>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form">
+
     <l:layout title="Deployment History">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js" type="text/javascript" ></script>
         <l:main-panel>
             <style>
                 #history {
@@ -50,47 +51,113 @@
 
 
             </style>
+
             <h1>
                 Deployment History
             </h1>
-            <table id="history">
-                <thead>
-                    <tr>
-                        <th class="country_heading" colspan="1"></th>
-                        <th class="previous" colspan="4">Previous</th>
-                        <th colspan="4">Current</th>
-                    </tr>
-                    <tr>
-                        <th class="country_heading">Country</th>
-                        <th class="previous">Version</th>
-                        <th class="previous">Date</th>
-                        <th class="previous">Status</th>
-                        <th class="previous">Branch</th>
 
-                        <th>Version</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Branch</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <j:forEach var="countryDeployment" items="${it.countryDeploymentStats}">
-                    <tr>
-                        <td class="country">${countryDeployment.country}</td>
-                        <td class="previous">${countryDeployment.previousArtifactVersion}</td>
-                        <td class="previous">${countryDeployment.previousDeploymentDate}</td>
-                        <td class="previous">${countryDeployment.previousDeploymentStatus}</td>
-                        <td class="previous">${countryDeployment.previousBranchName}</td>
+           <h3>Choose an environment:</h3>
+           <select id="environment-list" data-bind="options: $root.environments, value: env, optionsText: 'name'">
+           </select>
 
-                        <td class="current">${countryDeployment.currentArtifactVersion}</td>
-                        <td class="current">${countryDeployment.currentDeploymentDate}</td>
-                        <td class="current">${countryDeployment.currentDeploymentStatus}</td>
-                        <td class="current">${countryDeployment.currentBranchName}</td>
-                    </tr>
-                </j:forEach>
-                </tbody>
-            </table>
+            <br/>
+            <br/>
+            <br/>
+           <table id="history">
+               <thead>
+               <tr>
+                   <th class="country_heading" colspan="1"></th>
+                   <th class="previous" colspan="5">Previous</th>
+                   <th colspan="5">Current</th>
+               </tr>
+               <tr>
+                   <th class="country_heading">Country</th>
+                   <th class="previous">Version</th>
+                   <th class="previous">Commit</th>
+                   <th class="previous">Date</th>
+                   <th class="previous">Branch</th>
+                   <th class="previous">Status</th>
 
+                   <th>Version</th>
+                   <th>Commit</th>
+                   <th>Date</th>
+                   <th>Branch</th>
+                   <th>Status</th>
+               </tr>
+               </thead>
+               <tbody data-bind="foreach: environment(), visible: environment().length > 0">
+                   <tr>
+                       <td class="country" data-bind="text: name"></td>
+                       <td class="previous" data-bind="text: previousDeploymentStats.artifactVersion"></td>
+                       <td class="previous" data-bind="text: previousDeploymentStats.commit"></td>
+                       <td class="previous" data-bind="text: previousDeploymentStats.date"></td>
+                       <td class="previous" data-bind="text: previousDeploymentStats.branch"></td>
+                       <td class="previous" data-bind="text: previousDeploymentStats.status"></td>
+
+                       <td class="current" data-bind="text: currentDeploymentStats.artifactVersion"></td>
+                       <td class="current" data-bind="text: currentDeploymentStats.commit"></td>
+                       <td class="current" data-bind="text: currentDeploymentStats.date"></td>
+                       <td class="current" data-bind="text: currentDeploymentStats.branch"></td>
+                       <td class="current" data-bind="text: currentDeploymentStats.status"></td>
+                   </tr>
+               </tbody>
+           </table>
+
+    <script>
+
+                var appModel;
+                function AppViewModel() {
+                    appModel = this;
+                    this.environments = [
+                        {
+                            name: undefined
+                        },
+                        {
+                            name: "DEV"
+                        },
+                        {
+                            name: "SIT"
+                        },
+                        {
+                            name: "UAT"
+                        },
+                        {
+                            name: "PROD"
+                        }
+                    ];
+                    this.env =  ko.observable({});
+                    this.env.subscribe(function(event){
+                        if(event.name !== undefined)
+                            getDeploymentStatisticsForEnvironment(event.name)
+                    });
+
+
+                    this.environment = ko.observableArray([])
+
+                }
+
+                function getDeploymentStatisticsForEnvironment(env){
+                    new Ajax.Request('deploymentStatisticsForEnvironment', {
+                                            method: 'GET',
+                                            parameters: {selectedEnv: env},
+                                            onSuccess: function(response) {
+                                                while(appModel.environment().length > 0) {
+                                                    appModel.environment.pop()
+                                                }
+                                                if(response.responseJSON){
+                                                    response.responseJSON.countries.forEach(function(country){
+                                                        appModel.environment.push(country)
+                                                    })
+                                                }
+                                            }
+                    });
+                }
+
+                ko.applyBindings(new AppViewModel());
+
+
+        </script>
         </l:main-panel>
     </l:layout>
+
 </j:jelly>
