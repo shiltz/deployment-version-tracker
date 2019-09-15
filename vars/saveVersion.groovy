@@ -79,7 +79,7 @@ def writeNewDeploymentConfig(input, filename){
 
 
 def process(String country, String env) {
-    final String FILE_NAME = "../jenkins/output.json"
+    final String FILE_NAME = "output.json"
     try {
         // Read File
         DeploymentConfiguration input = readDeploymentConfiguration(FILE_NAME)
