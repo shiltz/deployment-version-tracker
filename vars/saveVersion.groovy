@@ -13,6 +13,11 @@ class Environment {
         this.name = name
         this.countries = countryList
     }
+
+    Environment(String name){
+        this.name = name
+        this.countries = new ArrayList<>()
+    }
 }
 
 class Country {
@@ -49,7 +54,7 @@ class CountryDeploymentStatsModel {
 
 Country getCountry(String environmentName, String countryName, DeploymentConfiguration configuration){
     Optional<Environment> environment1 = configuration.environments.stream().filter({environment -> environment.name.equals(environmentName)}).findFirst()
-    return environment1.get().countries.stream().filter({country -> country.name.equals(countryName)}).findFirst().get();
+    return environment1.orElse(new Environment(environmentName)).countries.stream().filter({country -> country.name.equals(countryName)}).findFirst().orElse(new Country(countryName, new ArrayList<>()))
 }
 
 DeploymentConfiguration readDeploymentConfiguration(filename) {
