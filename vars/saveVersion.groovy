@@ -95,7 +95,7 @@ CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
     def countryUpdate = new CountryDeploymentStatsModel()
     countryUpdate.artifactVersion = "${MAJOR_VERSION}.${BUILD_NUMBER}"
     countryUpdate.commit = "${MAJOR_VERSION}.${BUILD_NUMBER}"
-    countryUpdate.date = "1568558436"
+    countryUpdate.date = new Date().getTime()
     countryUpdate.status = "SUCCESSFUL"
     return countryUpdate
 }
