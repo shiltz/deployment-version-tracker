@@ -54,9 +54,10 @@ class CountryDeploymentStatsModel {
 
 Country getCountry(String environmentName, String countryName, DeploymentConfiguration configuration){
   Environment environment1;
+  Country country1;
   configuration.environments.each{ value, key -> 
   		if(value.name.equals(environmentName)){
-  		  environment1 = environment;
+  		  environment1 = value;
 	 	}
 	}
   //Environment environment1;
@@ -66,16 +67,22 @@ Country getCountry(String environmentName, String countryName, DeploymentConfigu
   //    break;
   //  }
  // }
-  //if(environment1 != null){
+  if(environment1 != null){
+    environment1.countries.each{ value, key -> 
+  		if(value.name.equals(countryName)){
+  		  country1 = value;
+	 	}
+	}
 //    for(Country country : environment.countries){
 //      if(country.name.equals(countryName)){
 //          return country;
 //      } 
 //    }
 //    return new Country(countryName, new ArrayList<>());
-//  } else {
+    return country1;
+  } else {
  //   return new Country(countryName, new ArrayList<>());
-//  }
+  }
 }
 
 DeploymentConfiguration readDeploymentConfiguration(filename) {
