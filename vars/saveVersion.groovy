@@ -54,8 +54,7 @@ class CountryDeploymentStatsModel {
 
 Country getCountry(String environmentName, String countryName, DeploymentConfiguration configuration){
   Environment environment1;
-  Sysem.out.println(configuration.environments);
-  configuration.environments.each{ key, value -> 
+  configuration.environments.each{ value, key -> 
   		if(value.name.equals(environmentName)){
   		  environment1 = environment;
 	 	}
