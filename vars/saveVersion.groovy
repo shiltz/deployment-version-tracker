@@ -95,6 +95,7 @@ DeploymentConfiguration readDeploymentConfiguration(filename) {
 
 CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
   def items = new LinkedHashSet();
+  name = "newpipe"
 		def job = Hudson.getInstance().getJob(name)
 		items.add(job);
       println 'Before loop: '
