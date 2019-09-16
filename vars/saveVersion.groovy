@@ -48,8 +48,9 @@ class CountryDeploymentStatsModel {
       	def items = new LinkedHashSet();
 		def job = Hudson.getInstance().getJob(name)
 		items.add(job);
+      println 'Before loop: '
       items.each { item ->
-        def job_data = Jenkins.instance.getItemByFullName(item.fullName)
+        def job_data = Jenkins.getInstance().getItemByFullName(item.fullName)
         println 'Job: ' + item.fullName
         
         //Check if job had atleast one build done
