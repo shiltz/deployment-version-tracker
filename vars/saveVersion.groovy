@@ -112,8 +112,11 @@ CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
         if (job_data.getLastBuild()) {
             last_job_num = job_data.getLastBuild().getNumber()
             def upStreamBuild = Jenkins.getInstance().getItemByFullName(item.fullName).getBuildByNumber(last_job_num)
-            
-            countryUpdate.status = upStreamBuild.result
+          
+          echo 'last_job_num' + last_job_num
+          echo 'upStreamBuild' + upStreamBuild.getNumber()
+
+          countryUpdate.status = upStreamBuild.result
           echo 'countryUpdate.status' + upStreamBuild.result
           echo 'countryUpdate.status1' + job_data.getLastBuild().result
           
