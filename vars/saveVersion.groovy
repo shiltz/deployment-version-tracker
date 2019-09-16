@@ -49,28 +49,29 @@ class CountryDeploymentStatsModel {
 		def job = Hudson.getInstance().getJob(name)
 		items.add(job);
       println 'Before loop: '
+      echo 'Before loop:'
       items.each { item ->
         def job_data = Jenkins.getInstance().getItemByFullName(item.fullName)
-        println 'Job: ' + item.fullName
+        echo 'Job: ' + item.fullName
         
         //Check if job had atleast one build done
         if (job_data.getLastBuild()) {
             last_job_num = job_data.getLastBuild().getNumber()
             def upStreamBuild = Jenkins.getInstance().getItemByFullName(item.fullName).getBuildByNumber(last_job_num)
             
-            println 'LastBuildNumer: ' + last_job_num
-            println "LastBuildTime: ${upStreamBuild.getTime()}"
+            echo 'LastBuildNumer: ' + last_job_num
+            echo "LastBuildTime: ${upStreamBuild.getTime()}"
             
             //Check if job had atleast one successful build
             if (job_data.getLastSuccessfulBuild()) {
-                println 'LastSuccessNumber: ' + job_data.getLastSuccessfulBuild().getNumber()
-                println 'LastSuccessResult: ' + job_data.getLastSuccessfulBuild().result
+                echo 'LastSuccessNumber: ' + job_data.getLastSuccessfulBuild().getNumber()
+                echo 'LastSuccessResult: ' + job_data.getLastSuccessfulBuild().result
             } else {
-                println 'LastSuccessNumber: Null'
-                println 'LastSuccessResult: Null'
+                echo 'LastSuccessNumber: Null'
+                echo 'LastSuccessResult: Null'
             }
         } else {
-            println 'LastBuildNumer: Null'
+            echo 'LastBuildNumer: Null'
         }
         
       }
