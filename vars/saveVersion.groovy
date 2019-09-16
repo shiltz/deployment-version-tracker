@@ -43,12 +43,14 @@ class CountryDeploymentStatsModel {
     String commit
     String status
     String date
+  	String branchName
 
     CountryDeploymentStatsModel(CountryDeploymentStatsModel copyCountryDeploymentStatsModel){
       	this.artifactVersion = copyCountryDeploymentStatsModel.artifactVersion;
         this.commit = copyCountryDeploymentStatsModel.commit;
         this.status = copyCountryDeploymentStatsModel.status;
         this.date = copyCountryDeploymentStatsModel.date;
+      	this.branchName = copyCountryDeploymentStatsModel.branchName;
     }
 
     CountryDeploymentStatsModel(){
@@ -96,9 +98,10 @@ DeploymentConfiguration readDeploymentConfiguration(filename) {
 CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
   def countryUpdate = new CountryDeploymentStatsModel()
     countryUpdate.artifactVersion = "${MAJOR_VERSION}.${BUILD_NUMBER}"
-    countryUpdate.commit = "${MAJOR_VERSION}.${BUILD_NUMBER}"
+    countryUpdate.commit = "-"
     countryUpdate.date = new Date().getTime()
     countryUpdate.status = "SUCCESSFUL"
+  	countryUpdate.branchName = "${BRANCH_NAME}"
   
   def items = new LinkedHashSet();
   name = "newpipe"
@@ -116,7 +119,7 @@ CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
           echo 'last_job_num' + last_job_num
           echo 'upStreamBuild' + upStreamBuild.getNumber()
 
-          countryUpdate.status = upStreamBuild.result
+          //countryUpdate.status = upStreamBuild.result
           echo 'countryUpdate.status' + upStreamBuild.result
           echo 'countryUpdate.status1' + job_data.getLastBuild().result
           
