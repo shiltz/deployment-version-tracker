@@ -18,6 +18,8 @@ class Environment {
         this.name = name
         this.countries = new ArrayList<>()
     }
+  
+  Environment(){}
 }
 
 class Country {
