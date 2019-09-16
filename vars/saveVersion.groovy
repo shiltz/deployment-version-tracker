@@ -1,5 +1,7 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import hudson.model.Hudson
+import jenkins.model.Jenkins
 
 class DeploymentConfiguration {
     List<Environment> environments  
@@ -43,6 +45,35 @@ class CountryDeploymentStatsModel {
     String date
 
     CountryDeploymentStatsModel(CountryDeploymentStatsModel copyCountryDeploymentStatsModel){
+      	def items = new LinkedHashSet();
+		def job = Hudson.getInstance().getJob(name)
+		items.add(job);
+      items.each { item ->
+        def job_data = Jenkins.instance.getItemByFullName(item.fullName)
+        println 'Job: ' + item.fullName
+        
+        //Check if job had atleast one build done
+        if (job_data.getLastBuild()) {
+            last_job_num = job_data.getLastBuild().getNumber()
+            def upStreamBuild = Jenkins.getInstance().getItemByFullName(item.fullName).getBuildByNumber(last_job_num)
+            
+            println 'LastBuildNumer: ' + last_job_num
+            println "LastBuildTime: ${upStreamBuild.getTime()}"
+            
+            //Check if job had atleast one successful build
+            if (job_data.getLastSuccessfulBuild()) {
+                println 'LastSuccessNumber: ' + job_data.getLastSuccessfulBuild().getNumber()
+                println 'LastSuccessResult: ' + job_data.getLastSuccessfulBuild().result
+            } else {
+                println 'LastSuccessNumber: Null'
+                println 'LastSuccessResult: Null'
+            }
+        } else {
+            println 'LastBuildNumer: Null'
+        }
+        
+      }
+      
         this.artifactVersion = copyCountryDeploymentStatsModel.artifactVersion;
         this.commit = copyCountryDeploymentStatsModel.commit;
         this.status = copyCountryDeploymentStatsModel.status;
