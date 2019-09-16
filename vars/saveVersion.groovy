@@ -102,6 +102,7 @@ CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
     countryUpdate.date = new Date().getTime()
     countryUpdate.status = "SUCCESSFUL"
   	countryUpdate.branchName = "${BRANCH_NAME}"
+  	
   
   def items = new LinkedHashSet();
   name = "newpipe"
@@ -118,6 +119,7 @@ CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
           
           echo 'last_job_num' + last_job_num
           echo 'upStreamBuild' + upStreamBuild.getNumber()
+          countryUpdate.buildNumber = last_job_num
 
           //countryUpdate.status = upStreamBuild.result
           echo 'countryUpdate.status' + upStreamBuild.result
