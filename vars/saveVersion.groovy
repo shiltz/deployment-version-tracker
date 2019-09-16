@@ -94,43 +94,36 @@ DeploymentConfiguration readDeploymentConfiguration(filename) {
 }
 
 CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
+  def countryUpdate = new CountryDeploymentStatsModel()
+    countryUpdate.artifactVersion = "${MAJOR_VERSION}.${BUILD_NUMBER}"
+    countryUpdate.commit = "${MAJOR_VERSION}.${BUILD_NUMBER}"
+    countryUpdate.date = new Date().getTime()
+    countryUpdate.status = "SUCCESSFUL"
+  
   def items = new LinkedHashSet();
   name = "newpipe"
 		def job = Hudson.getInstance().getJob(name)
 		items.add(job);
-      println 'Before loop: '
-      echo 'Before loop:'
+    
       items.each { item ->
         def job_data = Jenkins.getInstance().getItemByFullName(item.fullName)
-        echo 'Job: ' + item.fullName
         
         //Check if job had atleast one build done
         if (job_data.getLastBuild()) {
             last_job_num = job_data.getLastBuild().getNumber()
             def upStreamBuild = Jenkins.getInstance().getItemByFullName(item.fullName).getBuildByNumber(last_job_num)
             
-            echo 'LastBuildNumer: ' + last_job_num
-            echo "LastBuildTime: ${upStreamBuild.getTime()}"
-            
-            //Check if job had atleast one successful build
-            if (job_data.getLastSuccessfulBuild()) {
-                echo 'LastSuccessNumber: ' + job_data.getLastSuccessfulBuild().getNumber()
-                echo 'LastSuccessResult: ' + job_data.getLastSuccessfulBuild().result
-            } else {
-                echo 'LastSuccessNumber: Null'
-                echo 'LastSuccessResult: Null'
-            }
+            countryUpdate.status = upStreamBuild.result
+          echo 'countryUpdate.status' + upStreamBuild.result
+          echo 'countryUpdate.status1' + job_data.getLastBuild().result
+          
         } else {
             echo 'LastBuildNumer: Null'
         }
         
       }
   
-    def countryUpdate = new CountryDeploymentStatsModel()
-    countryUpdate.artifactVersion = "${MAJOR_VERSION}.${BUILD_NUMBER}"
-    countryUpdate.commit = "${MAJOR_VERSION}.${BUILD_NUMBER}"
-    countryUpdate.date = new Date().getTime()
-    countryUpdate.status = "SUCCESSFUL"
+    
     return countryUpdate
 }
 
