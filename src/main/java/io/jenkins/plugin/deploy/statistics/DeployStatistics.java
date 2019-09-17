@@ -5,6 +5,7 @@ import hudson.model.Run;
 import io.jenkins.plugin.deploy.statistics.model.CountryDeploymentStats;
 import io.jenkins.plugin.deploy.statistics.model.DeploymentConfiguration;
 import io.jenkins.plugin.deploy.statistics.model.Environment;
+import io.jenkins.plugin.deploy.statistics.model.Project;
 import jenkins.model.RunAction2;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.kohsuke.stapler.StaplerRequest;
@@ -15,6 +16,8 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.text.DateFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,11 +32,13 @@ public class DeployStatistics implements RunAction2 {
     }
 
     private String readDeploymentHistory() throws IOException {
-        return new String(Files.readAllBytes(project.getRootDir().toPath().resolve("workspace@libs/deployer/work/workspace/"+project.getName()+"/output.json")),
+        return new String(Files.readAllBytes(project.getRootDir().toPath().resolve("/var/lib/jenkins/jobs/"+project.getName()+"/output.json")),
                 Charset.defaultCharset());
     }
     private List<Environment> getEnvironments() throws IOException {
-        return new ObjectMapper().readValue(this.readDeploymentHistory(), DeploymentConfiguration.class)
+        String history = this.readDeploymentHistory();
+        System.out.println(history);
+        return new ObjectMapper().readValue(history, DeploymentConfiguration.class)
                     .getEnvironments();
     }
 
@@ -47,15 +52,29 @@ public class DeployStatistics implements RunAction2 {
         environment.getCountries().forEach((country) -> {
             List<CountryDeploymentStats> countryDeploymentStats = country.getDeploymentStats()
                     .stream()
-                    .sorted()
-                    .limit(2)
+                    .map(countryDeployment -> {
+                        if(countryDeployment.getDate() != null){
+                            try {
+                                countryDeployment.setDateDisplay(DateFormat.getDateTimeInstance().format(countryDeployment.getDate()));
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                                countryDeployment.setDateDisplay(String.valueOf(countryDeployment.getDate()));
+                            }
+                        }
+                        return countryDeployment;
+                    })
                     .collect(Collectors.toList());
 
-            if(countryDeploymentStats.size() == 2){
-                country.setCurrentDeploymentStats(countryDeploymentStats.get(0));
-                country.setPreviousDeploymentStats(countryDeploymentStats.get(1));
+            Collections.sort(countryDeploymentStats);
+
+
+            if(countryDeploymentStats.size() > 1){
+                country.setCurrentDeploymentStats(countryDeploymentStats.get(countryDeploymentStats.size() - 1));
+                country.setPreviousDeploymentStats(countryDeploymentStats.get(countryDeploymentStats.size() - 2));
             } else if (countryDeploymentStats.size() == 1){
                 country.setCurrentDeploymentStats(countryDeploymentStats.get(0));
+                country.setPreviousDeploymentStats(new CountryDeploymentStats());
             } else {
                 System.out.println("No history:" + countryDeploymentStats.size());
             }
@@ -79,17 +98,28 @@ public class DeployStatistics implements RunAction2 {
         this.selectedEnv = selectedEnv;
     }
 
-    public String doTestConnection(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
-        this.selectedEnv = req.getParameter("selectedEnv");
-        return this.selectedEnv;
-    }
-
     public void doDeploymentStatisticsForEnvironment(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
         this.selectedEnv = req.getParameter("selectedEnv");
         Environment environment = this.getEnvironment(this.selectedEnv);
         this.addDeploymentSummary(environment);
         rsp.setContentType("application/json");
         rsp.getOutputStream().write(new ObjectMapper().writeValueAsString(environment).getBytes());
+        rsp.flushBuffer();
+    }
+
+    public void doGetProjectDetails(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+        Project project = new Project("");
+        if(this.project.getName().contains("sit") || this.project.getName().contains("SIT") ){
+            project.setDeploymentEnv("SIT");
+        }
+        else if(this.project.getName().contains("uat") || this.project.getName().contains("UAT") ){
+            project.setDeploymentEnv("UAT");
+        }
+        if(this.project.getName().contains("prod") || this.project.getName().contains("PROD") ){
+            project.setDeploymentEnv("PROD");
+        }
+        rsp.setContentType("application/json");
+        rsp.getOutputStream().write(new ObjectMapper().writeValueAsString(project).getBytes());
         rsp.flushBuffer();
     }
 

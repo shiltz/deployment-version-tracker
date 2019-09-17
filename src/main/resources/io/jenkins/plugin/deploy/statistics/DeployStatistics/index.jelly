@@ -73,13 +73,13 @@
                <tr>
                    <th class="country_heading">Country</th>
                    <th class="previous">Version</th>
-                   <th class="previous">Commit</th>
+                   <th class="previous">Build #</th>
                    <th class="previous">Date</th>
                    <th class="previous">Branch</th>
                    <th class="previous">Status</th>
 
                    <th>Version</th>
-                   <th>Commit</th>
+                   <th>Build #</th>
                    <th>Date</th>
                    <th>Branch</th>
                    <th>Status</th>
@@ -89,15 +89,15 @@
                    <tr>
                        <td class="country" data-bind="text: name"></td>
                        <td class="previous" data-bind="text: previousDeploymentStats.artifactVersion"></td>
-                       <td class="previous" data-bind="text: previousDeploymentStats.commit"></td>
-                       <td class="previous" data-bind="text: previousDeploymentStats.date"></td>
-                       <td class="previous" data-bind="text: previousDeploymentStats.branch"></td>
+                       <td class="previous" data-bind="text: previousDeploymentStats.buildNumber"></td>
+                       <td class="previous" data-bind="text: previousDeploymentStats.dateDisplay"></td>
+                       <td class="previous" data-bind="text: previousDeploymentStats.branchName"></td>
                        <td class="previous" data-bind="text: previousDeploymentStats.status"></td>
 
                        <td class="current" data-bind="text: currentDeploymentStats.artifactVersion"></td>
-                       <td class="current" data-bind="text: currentDeploymentStats.commit"></td>
-                       <td class="current" data-bind="text: currentDeploymentStats.date"></td>
-                       <td class="current" data-bind="text: currentDeploymentStats.branch"></td>
+                       <td class="current" data-bind="text: currentDeploymentStats.buildNumber"></td>
+                       <td class="current" data-bind="text: currentDeploymentStats.dateDisplay"></td>
+                       <td class="current" data-bind="text: currentDeploymentStats.branchName"></td>
                        <td class="current" data-bind="text: currentDeploymentStats.status"></td>
                    </tr>
                </tbody>
@@ -153,7 +153,21 @@
                     });
                 }
 
+                function getProjectDetails(){
+                    new Ajax.Request('getProjectDetails', {
+                                            method: 'GET',
+                                            parameters: {},
+                                            onSuccess: function(response) {
+                                                if(response.responseJSON){
+                                                    appModel.env = response.responseJSON
+                                                    console.log('lp:' + appModel.env);
+                                                }
+                                            }
+                    });
+                }
+
                 ko.applyBindings(new AppViewModel());
+
 
 
         </script>

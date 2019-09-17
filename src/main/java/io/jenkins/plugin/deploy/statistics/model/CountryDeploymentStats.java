@@ -1,12 +1,15 @@
 package io.jenkins.plugin.deploy.statistics.model;
 
-import java.util.*;
+import java.util.Date;
 
-public class CountryDeploymentStats implements Comparable<CountryDeploymentStats> {
+public class CountryDeploymentStats implements Comparable<CountryDeploymentStats>{
     private String artifactVersion;
     private String commit;
     private String status;
     private Date date;
+    private String dateDisplay;
+    private String branchName;
+    private String buildNumber;
 
     public String getArtifactVersion() {
         return artifactVersion != null ? this.artifactVersion : "-";
@@ -33,15 +36,39 @@ public class CountryDeploymentStats implements Comparable<CountryDeploymentStats
     }
 
     public Date getDate() {
-        return this.date;
+        return this.date != null ? this.date : new Date(1990, 07, 26);
     }
 
     public void setDate(Date date) {
         this.date = date;
     }
 
+    public String getDateDisplay() {
+        return dateDisplay;
+    }
+
+    public void setDateDisplay(String dateDisplay) {
+        this.dateDisplay = dateDisplay;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getBuildNumber() {
+        return buildNumber;
+    }
+
+    public void setBuildNumber(String buildNumber) {
+        this.buildNumber = buildNumber;
+    }
+
     @Override
     public int compareTo(CountryDeploymentStats o) {
-        return this.date.compareTo(o.date);
+        return this.getDate().compareTo(o.getDate());
     }
 }
