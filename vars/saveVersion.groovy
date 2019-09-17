@@ -44,6 +44,7 @@ class CountryDeploymentStatsModel {
     String status
     String date
   	String branchName
+  	String buildNumber
 
     CountryDeploymentStatsModel(CountryDeploymentStatsModel copyCountryDeploymentStatsModel){
       	this.artifactVersion = copyCountryDeploymentStatsModel.artifactVersion;
@@ -51,6 +52,7 @@ class CountryDeploymentStatsModel {
         this.status = copyCountryDeploymentStatsModel.status;
         this.date = copyCountryDeploymentStatsModel.date;
       	this.branchName = copyCountryDeploymentStatsModel.branchName;
+      	this.buildNumber = copyCountryDeploymentStatsModel.buildNumber;
     }
 
     CountryDeploymentStatsModel(){
