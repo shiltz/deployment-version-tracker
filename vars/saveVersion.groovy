@@ -88,7 +88,7 @@ Country getCountry(String environmentName, String countryName, DeploymentConfigu
     } else {
       Country newCountry = new Country(countryName, new ArrayList<>())
       environment1.countries.add(newCountry)
-      return country1
+      return newCountry
     }
 
     
