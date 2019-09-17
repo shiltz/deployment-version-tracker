@@ -76,6 +76,7 @@ Country getCountry(String environmentName, String countryName, DeploymentConfigu
     configuration.environments.add(newEnvironment)
     Country newCountry = new Country(countryName, new ArrayList<>())
     newEnvironment.countries.add(newCountry);
+    return newCountry
   }
   
 
