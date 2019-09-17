@@ -107,11 +107,11 @@ DeploymentConfiguration readDeploymentConfiguration(filename) {
     return new JsonSlurper().parse(reader)
   } catch(java.io.FileNotFoundException v){
     System.out.println("Create a new file")
-    def writer = new BufferedWriter(new FileWriter(filename))
-    writer.write(JsonOutput.toJson(new DeploymentConfiguration()))
-    writer.flush()
-    writer.close()
-    return new JsonSlurper().parse(new FileReader(filename))
+    //def writer = new BufferedWriter(new FileWriter(filename))
+    //writer.write(JsonOutput.toJson(new DeploymentConfiguration()))
+    //writer.flush()
+    //writer.close()
+    //return new JsonSlurper().parse(new FileReader(filename))
   }
     
 }
