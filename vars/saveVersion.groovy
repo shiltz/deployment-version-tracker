@@ -63,7 +63,7 @@ class CountryDeploymentStatsModel {
 Country getCountry(String environmentName, String countryName, DeploymentConfiguration configuration){
   Environment environment1;
   Country country1;
-  Environment newEnvironment;
+  
   if(configuration.environments != null && configuration.environments.size() > 0){
     configuration.environments.each{ value, key -> 
   		if(value.name.equals(environmentName)){
@@ -72,7 +72,7 @@ Country getCountry(String environmentName, String countryName, DeploymentConfigu
 	}
   } else {
     configuration.environments = new ArrayList<>()
-    newEnvironment = new Environment(environmentName)
+    Environment newEnvironment = new Environment(environmentName)
     configuration.environments.add(newEnvironment)
   }
   
@@ -94,6 +94,7 @@ Country getCountry(String environmentName, String countryName, DeploymentConfigu
     
   } else {
     Country newCountry = new Country(countryName, new ArrayList<>())
+    Environment newEnvironment = new Environment(environmentName)
     newEnvironment.countries.add(newCountry);
     return newCountry;
   }
