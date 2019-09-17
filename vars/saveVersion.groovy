@@ -97,7 +97,7 @@ DeploymentConfiguration readDeploymentConfiguration(filename) {
     return new JsonSlurper().parse(new FileReader(filename));
 }
 
-CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
+CountryDeploymentStatsModel generateCountryDeploymentStatsModel(String projectName) {
   def countryUpdate = new CountryDeploymentStatsModel()
     countryUpdate.artifactVersion = "${MAJOR_VERSION}.${BUILD_NUMBER}"
     countryUpdate.commit = "-"
@@ -106,9 +106,8 @@ CountryDeploymentStatsModel generateCountryDeploymentStatsModel() {
   	countryUpdate.branchName = "${BRANCH_NAME}"
   	
   
-  def items = new LinkedHashSet();
-  name = "newpipe"
-		def job = Hudson.getInstance().getJob(name)
+  		def items = new LinkedHashSet();
+		def job = Hudson.getInstance().getJob(projectName)
 		items.add(job);
     
       items.each { item ->
@@ -150,14 +149,14 @@ def writeNewDeploymentConfig(input, filename){
 }
 
 
-def process(String country, String env) {
-    final String FILE_NAME = "/var/lib/jenkins/jobs/newpipe/output.json"
+def process(String country, String env, String projectName) {
+    final String FILE_NAME = "/var/lib/jenkins/jobs/" + projectName + "/output.json"
     try {
         // Read File
         DeploymentConfiguration input = readDeploymentConfiguration(FILE_NAME)
 
         // Update
-        addNewCountryDeploymentStat(env, country, input, generateCountryDeploymentStatsModel())
+        addNewCountryDeploymentStat(env, country, input, generateCountryDeploymentStatsModel(projectName))
 
         // Write
         writeNewDeploymentConfig(input, FILE_NAME);
@@ -168,6 +167,6 @@ def process(String country, String env) {
 }
 
 
-def call(String country, String env){
-    process(country, env)
+def call(String country, String env, String projectName){
+    process(country, env, projectName)
 }
