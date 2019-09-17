@@ -80,14 +80,15 @@ Country getCountry(String environmentName, String countryName, DeploymentConfigu
   if(environment1 != null){
     environment1.countries.each{ value, key -> 
   		if(value.name.equals(countryName)){
-  		  country1 = value;
+  		  country1 = value
 	 	}
 	}
     if(country1 != null){
-      return country1;
+      return country1
     } else {
       Country newCountry = new Country(countryName)
       environment1.countries.add(newCountry)
+      return country1
     }
 
     
