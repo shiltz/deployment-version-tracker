@@ -86,14 +86,14 @@ Country getCountry(String environmentName, String countryName, DeploymentConfigu
     if(country1 != null){
       return country1
     } else {
-      Country newCountry = new Country(countryName)
+      Country newCountry = new Country(countryName, new ArrayList<>())
       environment1.countries.add(newCountry)
       return country1
     }
 
     
   } else {
-    Country newCountry = new Country(countryName)
+    Country newCountry = new Country(countryName, new ArrayList<>())
     newEnvironment.countries.add(newCountry);
     return newCountry;
   }
