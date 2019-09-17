@@ -159,15 +159,17 @@
                                             parameters: {},
                                             onSuccess: function(response) {
                                                 if(response.responseJSON){
-                                                    appModel.env = response.responseJSON
-                                                    console.log('lp:' + appModel.env);
+                                                var found = appModel.environments.find(function(data){
+                                                    return data.name === response.responseJSON.deploymentEnv
+                                                 });
+                                                    appModel.env(found)
                                                 }
                                             }
                     });
                 }
 
                 ko.applyBindings(new AppViewModel());
-
+                getProjectDetails()
 
 
         </script>
