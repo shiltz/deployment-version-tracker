@@ -147,7 +147,7 @@ def addNewCountryDeploymentStat(env, country, input, countryUpdate) {
 }
 
 def writeNewDeploymentConfig(input, filename){
-    def writer = new BufferedWriter(filename);
+    def writer = new BufferedWriter(new FileWriter(filename))
     writer.write(JsonOutput.toJson(input))
     writer.flush()
     writer.close()
