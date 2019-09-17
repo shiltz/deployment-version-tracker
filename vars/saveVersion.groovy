@@ -102,7 +102,18 @@ Country getCountry(String environmentName, String countryName, DeploymentConfigu
 }
 
 DeploymentConfiguration readDeploymentConfiguration(filename) {
-    return new JsonSlurper().parse(new FileReader(filename));
+  try{
+    FileReader reader = new FileReader(filename)
+    return new JsonSlurper().parse(reader)
+  } catch(java.io.FileNotFoundException v){
+    System.out.println("Create a new file")
+    def writer = new BufferedWriter(new FileWriter(filename))
+    writer.write(JsonOutput.toJson("{}"))
+    writer.flush()
+    writer.close()
+    return new JsonSlurper().parse(new FileReader(filename))
+  }
+    
 }
 
 CountryDeploymentStatsModel generateCountryDeploymentStatsModel(String projectName) {
