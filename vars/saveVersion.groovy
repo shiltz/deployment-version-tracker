@@ -63,33 +63,38 @@ class CountryDeploymentStatsModel {
 Country getCountry(String environmentName, String countryName, DeploymentConfiguration configuration){
   Environment environment1;
   Country country1;
-  configuration.environments.each{ value, key -> 
+  Environment newEnvironment;
+  if(configuration.environments != null && configuration.environments.size() > 0){
+    configuration.environments.each{ value, key -> 
   		if(value.name.equals(environmentName)){
   		  environment1 = value;
 	 	}
 	}
-  //Environment environment1;
-  //for(Environment environment : configuration.environments){
-  //  if(environment.name.equals(environmentName)){
-  //    environment1 = environment;
-  //    break;
-  //  }
- // }
+  } else {
+    configuration.environments = new ArrayList<>()
+    newEnvironment = new Environment(environmentName)
+    configuration.environments.add(newEnvironment)
+  }
+  
+
   if(environment1 != null){
     environment1.countries.each{ value, key -> 
   		if(value.name.equals(countryName)){
   		  country1 = value;
 	 	}
 	}
-//    for(Country country : environment.countries){
-//      if(country.name.equals(countryName)){
-//          return country;
-//      } 
-//    }
-//    return new Country(countryName, new ArrayList<>());
-    return country1;
+    if(country1 != null){
+      return country1;
+    } else {
+      Country newCountry = new Country(countryName)
+      environment1.countries.add(newCountry)
+    }
+
+    
   } else {
- //   return new Country(countryName, new ArrayList<>());
+    Country newCountry = new Country(countryName)
+    newEnvironment.countries.add(newCountry);
+    return newCountry;
   }
 }
 
