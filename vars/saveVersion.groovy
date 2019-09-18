@@ -127,12 +127,14 @@ CountryDeploymentStatsModel generateCountryDeploymentStatsModel(String projectNa
     countryUpdate.status = "SUCCESSFUL"
   	countryUpdate.branchName = "${BRANCH_NAME}"
   	
-  
+    System.out.println("Project Name:"+projectName)
+
   		def items = new LinkedHashSet();
 		def job = Hudson.getInstance().getJob(projectName)
 		items.add(job);
-    
+
       items.each { item ->
+              System.out.println("item:"+item)
         def job_data = Jenkins.getInstance().getItemByFullName(item.fullName)
         
         //Check if job had atleast one build done
