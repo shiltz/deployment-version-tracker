@@ -110,7 +110,8 @@ DeploymentConfiguration readDeploymentConfiguration(filename) {
     return new JsonSlurper().parse(reader)
   } catch(java.io.FileNotFoundException v){
     System.out.println("Create a new file")
-    File f = new File(filename)
+    
+    File f = new File(Path.of(filename).getParent().toString())
     f.mkdirs()
     
     def writer = new BufferedWriter(new FileWriter(filename))
