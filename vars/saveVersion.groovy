@@ -2,6 +2,7 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import hudson.model.Hudson
 import jenkins.model.Jenkins
+import java.nio.file.Paths
 
 class DeploymentConfiguration {
     List<Environment> environments  
@@ -111,7 +112,7 @@ DeploymentConfiguration readDeploymentConfiguration(filename) {
   } catch(java.io.FileNotFoundException v){
     System.out.println("Create a new file")
     
-    File f = new File(Path.get(filename).getParent().toString())
+    File f = new File(Paths.get(filename).getParent().toString())
     f.mkdirs()
     
     def writer = new BufferedWriter(new FileWriter(filename))
