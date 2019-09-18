@@ -172,6 +172,7 @@ def writeNewDeploymentConfig(input, filename){
 
 
 def process(String country, String env, String projectName) {
+  	projectName = projectName.replace(" ", "-")
     final String FILE_NAME = "/var/lib/jenkins/jobs/" + projectName + "/output.json"
     try {
         // Read File
