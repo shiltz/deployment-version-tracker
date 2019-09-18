@@ -57,7 +57,7 @@
             </h1>
 
            <h3>Choose an environment:</h3>
-           <select id="environment-list" data-bind="options: $root.environments, value: env, optionsText: 'name'">
+           <select id="environment-list" data-bind="options: $root.environments, value: env, optionsText: 'deploymentEnv'">
            </select>
 
             <br/>
@@ -105,30 +105,37 @@
 
     <script>
 
+                ko.observableArray.fn.find = function(prop, data) {
+                    var valueToMatch = data[prop];
+                    return ko.utils.arrayFirst(this(), function(item) {
+                        return item[prop] === valueToMatch;
+                    });
+                };
+
                 var appModel;
                 function AppViewModel() {
                     appModel = this;
-                    this.environments = [
+                    this.environments = ko.observableArray([
                         {
-                            name: undefined
+                            deploymentEnv: undefined
                         },
                         {
-                            name: "DEV"
+                            deploymentEnv: "DEV"
                         },
                         {
-                            name: "SIT"
+                            deploymentEnv: "SIT"
                         },
                         {
-                            name: "UAT"
+                            deploymentEnv: "UAT"
                         },
                         {
-                            name: "PROD"
+                            deploymentEnv: "PROD"
                         }
-                    ];
+                    ]);
                     this.env =  ko.observable({});
                     this.env.subscribe(function(event){
-                        if(event.name !== undefined)
-                            getDeploymentStatisticsForEnvironment(event.name)
+                        if(event.deploymentEnv !== undefined)
+                            getDeploymentStatisticsForEnvironment(event.deploymentEnv)
                     });
 
 
@@ -159,9 +166,7 @@
                                             parameters: {},
                                             onSuccess: function(response) {
                                                 if(response.responseJSON){
-                                                var found = appModel.environments.find(function(data){
-                                                    return data.name === response.responseJSON.deploymentEnv
-                                                 });
+                                                    var found = appModel.environments.find("deploymentEnv", response.responseJSON)
                                                     appModel.env(found)
                                                 }
                                             }

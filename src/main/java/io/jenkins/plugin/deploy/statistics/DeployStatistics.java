@@ -32,7 +32,9 @@ public class DeployStatistics implements RunAction2 {
     }
 
     private String readDeploymentHistory() throws IOException {
-        return new String(Files.readAllBytes(project.getRootDir().toPath().resolve("/var/lib/jenkins/jobs/"+project.getName()+"/output.json")),
+        System.out.println("project name:" + project.getName());
+        String projectName = project.getName().replace(" ", "-");
+        return new String(Files.readAllBytes(project.getRootDir().toPath().resolve("/var/lib/jenkins/jobs/"+projectName+"/output.json")),
                 Charset.defaultCharset());
     }
     private List<Environment> getEnvironments() throws IOException {
