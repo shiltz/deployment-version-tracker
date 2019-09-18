@@ -127,36 +127,9 @@ CountryDeploymentStatsModel generateCountryDeploymentStatsModel(String projectNa
     countryUpdate.status = "SUCCESSFUL"
   	countryUpdate.branchName = "${BRANCH_NAME}"
   	
-    System.out.println("Project Name:"+projectName)
-
-  		def items = new LinkedHashSet();
-		def job = Hudson.getInstance().getJob(projectName)
-		items.add(job);
-
-      items.each { item ->
-              System.out.println("item:"+item)
-        def job_data = Jenkins.getInstance().getItemByFullName(item.fullName)
-        
-        //Check if job had atleast one build done
-        if (job_data.getLastBuild()) {
-            last_job_num = job_data.getLastBuild().getNumber()
-            def upStreamBuild = Jenkins.getInstance().getItemByFullName(item.fullName).getBuildByNumber(last_job_num)
-          
-          echo 'last_job_num' + last_job_num
-          echo 'upStreamBuild' + upStreamBuild.getNumber()
-          countryUpdate.buildNumber = last_job_num
-
-          //countryUpdate.status = upStreamBuild.result
-          echo 'countryUpdate.status' + upStreamBuild.result
-          echo 'countryUpdate.status1' + job_data.getLastBuild().result
-          
-        } else {
-            echo 'LastBuildNumer: Null'
-        }
-        
-      }
-  
-    
+  	int lastBuildNumber = Jenkins.getInstance().getItemByFullName(projectName, Job.class).getLastBuild().getNumber();
+  	countryUpdate.buildNumber = lastBuildNumber.toString()
+ 
     return countryUpdate
 }
 
@@ -175,8 +148,7 @@ def writeNewDeploymentConfig(input, filename){
 
 def process(String country, String env, String projectName) {
   	String formattedProjectName = projectName.replace(" ", "-")
-  	int slashIndex = formattedProjectName.indexOf("/") + 1;
-  	projectName = projectName.substring(slashIndex);
+  	
     final String FILE_NAME = "/var/lib/jenkins/jobs/" + formattedProjectName + "/output.json"
     try {
         // Read File
