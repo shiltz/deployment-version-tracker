@@ -111,7 +111,7 @@ DeploymentConfiguration readDeploymentConfiguration(filename) {
   } catch(java.io.FileNotFoundException v){
     System.out.println("Create a new file")
     
-    File f = new File(Path.of(filename).getParent().toString())
+    File f = new File(Path.get(filename).getParent().toString())
     f.mkdirs()
     
     def writer = new BufferedWriter(new FileWriter(filename))
