@@ -2,6 +2,7 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import hudson.model.Hudson
 import jenkins.model.Jenkins
+import java.nio.file.Paths
 
 class DeploymentConfiguration {
     List<Environment> environments  
@@ -110,6 +111,10 @@ DeploymentConfiguration readDeploymentConfiguration(filename) {
     return new JsonSlurper().parse(reader)
   } catch(java.io.FileNotFoundException v){
     System.out.println("Create a new file")
+    
+    File f = new File(Paths.get(filename).getParent().toString())
+    f.mkdirs()
+    
     def writer = new BufferedWriter(new FileWriter(filename))
     writer.write(JsonOutput.toJson(new DeploymentConfiguration()))
     writer.flush()
@@ -127,34 +132,9 @@ CountryDeploymentStatsModel generateCountryDeploymentStatsModel(String projectNa
     countryUpdate.status = "SUCCESSFUL"
   	countryUpdate.branchName = "${BRANCH_NAME}"
   	
-  
-  		def items = new LinkedHashSet();
-		def job = Hudson.getInstance().getJob(projectName)
-		items.add(job);
-    
-      items.each { item ->
-        def job_data = Jenkins.getInstance().getItemByFullName(item.fullName)
-        
-        //Check if job had atleast one build done
-        if (job_data.getLastBuild()) {
-            last_job_num = job_data.getLastBuild().getNumber()
-            def upStreamBuild = Jenkins.getInstance().getItemByFullName(item.fullName).getBuildByNumber(last_job_num)
-          
-          echo 'last_job_num' + last_job_num
-          echo 'upStreamBuild' + upStreamBuild.getNumber()
-          countryUpdate.buildNumber = last_job_num
-
-          //countryUpdate.status = upStreamBuild.result
-          echo 'countryUpdate.status' + upStreamBuild.result
-          echo 'countryUpdate.status1' + job_data.getLastBuild().result
-          
-        } else {
-            echo 'LastBuildNumer: Null'
-        }
-        
-      }
-  
-    
+  	int lastBuildNumber = Jenkins.getInstance().getItemByFullName(projectName, Job.class).getLastBuild().getNumber();
+  	countryUpdate.buildNumber = lastBuildNumber.toString()
+ 
     return countryUpdate
 }
 
@@ -172,8 +152,9 @@ def writeNewDeploymentConfig(input, filename){
 
 
 def process(String country, String env, String projectName) {
-    projectName = projectName.replace(" ", "-")
-    final String FILE_NAME = "/var/lib/jenkins/jobs/" + projectName + "/output.json"
+  	String formattedProjectName = projectName.replace(" ", "-")
+  	
+    final String FILE_NAME = "/var/lib/jenkins/jobs/" + formattedProjectName + "/output.json"
     try {
         // Read File
         DeploymentConfiguration input = readDeploymentConfiguration(FILE_NAME)
