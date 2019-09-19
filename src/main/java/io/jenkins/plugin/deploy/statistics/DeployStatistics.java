@@ -32,8 +32,8 @@ public class DeployStatistics implements RunAction2 {
     }
 
     private String readDeploymentHistory() throws IOException {
-        System.out.println("project name:" + project.getName());
-        String projectName = project.getName().replace(" ", "-");
+        System.out.println("project name:" + project.getFullName());
+        String projectName = project.getFullName().replace(" ", "-");
         return new String(Files.readAllBytes(project.getRootDir().toPath().resolve("/var/lib/jenkins/jobs/"+projectName+"/output.json")),
                 Charset.defaultCharset());
     }
