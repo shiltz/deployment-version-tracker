@@ -26,6 +26,7 @@ public class DeployStatistics implements RunAction2 {
 
     private WorkflowJob project;
     private String selectedEnv;
+    private Run run;
 
     public DeployStatistics(WorkflowJob project) {
         this.project = project;
@@ -117,8 +118,15 @@ public class DeployStatistics implements RunAction2 {
         else if(this.project.getName().contains("uat") || this.project.getName().contains("UAT") ){
             project.setDeploymentEnv("UAT");
         }
-        if(this.project.getName().contains("prod") || this.project.getName().contains("PROD") ){
+        else if(this.project.getName().contains("prod") || this.project.getName().contains("PROD") ){
             project.setDeploymentEnv("PROD");
+        } else if(this.project.getName().contains("PPE") || this.project.getName().contains("ppe")
+                    || this.project.getName().contains("pre-prod") || this.project.getName().contains("PRE-PROD")){
+            project.setDeploymentEnv("PRE-PROD");
+        } else if(this.project.getName().contains("PPE") || this.project.getName().contains("ppe")){
+            project.setDeploymentEnv("PRE-PROD");
+        } else {
+            project.setDeploymentEnv("");
         }
         rsp.setContentType("application/json");
         rsp.getOutputStream().write(new ObjectMapper().writeValueAsString(project).getBytes());
@@ -145,11 +153,17 @@ public class DeployStatistics implements RunAction2 {
 
     @Override
     public void onAttached(Run<?, ?> run) {
+        this.run = run;
         System.out.println("onAttached" + run.toString());
     }
 
     @Override
     public void onLoad(Run<?, ?> run) {
+        this.run = run;
         System.out.println("onLoad" + run.toString());
+    }
+
+    public Run<?,?> getRun() {
+        return this.run;
     }
 }

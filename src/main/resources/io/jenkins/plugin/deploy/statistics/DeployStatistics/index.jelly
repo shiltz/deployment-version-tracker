@@ -1,107 +1,259 @@
 <?jelly?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form" xmlns:st="jelly:stapler">
 
     <l:layout title="Deployment History">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js" type="text/javascript" ></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"></link>
+        <st:include page="sidepanel.jelly" it="${it.run}" optional="true" />
         <l:main-panel>
-            <style>
-                #history {
-                    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-                    border-collapse: collapse;
-                    width: 100%;
-                }
+                    <style>
+                        #history {
+                            border-collapse: collapse;
+                            width: 100%;
+                        }
 
-                #history tr:nth-child(even){background-color: #f2f2f2;}
+                        #history th {
+                            padding-top: 12px;
+                            padding-bottom: 12px;
+                            text-align: left;
+                            background-color: #d1e784;
+                            color: #092834;
+                        }
 
-                #history tr:hover {background-color: #ddd;}
+                        #history th.previous {
+                            background-color: #092834;
+                            color: #F0F7D4;
+                        }
+
+                        #history th.country_heading {
+                            background-color: #F0F7D4;
+                            color: black;
+                        }
+
+                        .current {
+                            background-color: #d1e784;
+                            color: #092834;
+                        }
+
+                        .country {
+                            background-color: #F0F7D4;
+                            color: #black;
+                        }
+
+                        .modal-header {
+                            background-color: #B2D732;
+                            color: #black;
+                        }
+
+                        .modal-table {
+                            background-color: #F0F7D4;
+                            color: #black;
+                            width: 100%;
+                        }
+
+                        .previous {
+                            background-color: #092834;
+                            color: #F0F7D4;
+                        }
+
+                        #history > tbody > tr:hover {
+                            opacity: 0.75;
+                        }
+
+                        #history_modal > thead > tr > th {
+                            text-align: left;
+                        }
+
+                        #history_modal > tbody > tr:hover {
+                            opacity: 0.8;
+                            background-color: #092834;
+                            color: #F0F7D4;
+                        }
+
+                        .nav_bar {
+                            color: #F0F7D4!important;
+                            background-color: #092834!important;
+
+                        }
+
+                        .nav_bar_selected {
+                            color: black!important;
+                            background-color: #B2D732!important;
+
+                        }
+
+                        .action-item {
+                            color: #black!important;
+                            background-color: #B2D732!important;
+                        }
+
+                        .sub-item {
+                            color: #black!important;
+                            background-color: #d1e784!important;
+                        }
+
+                        .card-footer {
+                            padding-bottom: 1em;
+                        }
+
+                        .card-background {
+                            background-color: #f0f7d6;
+                        }
+
+                        .page {
+                            background-color: #fafdf3;
+                        }
 
 
-                #history th {
-                    padding-top: 12px;
-                    padding-bottom: 12px;
-                    text-align: left;
-                    background-color: #B2D732;
-                    color: #092834;
-                }
 
-                #history th.previous{
-                    background-color: #092834;
-                    color: #F0F7D4;
-                }
+                    </style>
 
-                #history th.country_heading{
-                    background-color: #F0F7D4;
-                    color: black;
-                }
+            <div class="w3-bar nav_bar">
+                <button class="w3-bar-item w3-button nav_bar_selected" onclick="openTab(event, 'history_tab')">History</button>
+                <button class="w3-bar-item w3-button" onclick="openTab(event, 'settings_tab')">Settings</button>
+            </div>
 
-                .current {
-                    background-color: #B2D732;
-                    color: #092834;
-                }
+            <div id="history_tab" class="tab">
+                <div class="w3-container page">
+                    <div class="w3-card-4 card-background">
+                        <div class="w3-panel w3-round action-item">
+                            <h3>1 Choose an environment</h3>
+                        </div>
+                        <div class="w3-panel card-footer">
+                            <select id="environment-list" class="w3-select w3-border" data-bind="options: $root.environments, value: env, optionsText: 'deploymentEnv'">
+                            </select>
+                        </div>
+                    </div>
 
-                .country {
-                    background-color: #F0F7D4;
-                    color: #black;
-                }
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div class="w3-card-4 card-background">
+                            <div class="w3-panel w3-round action-item">
+                                <h3>2 View history</h3>
+                            </div>
 
-                .previous {
-                    background-color: #092834;
-                    color: #F0F7D4;
-                }
+                            <div class="w3-panel card-footer">
+                               <table id="history">
+                                   <thead>
+                                   <tr>
+                                       <th class="country_heading" colspan="1"></th>
+                                       <th class="previous" colspan="5">Previous</th>
+                                       <th colspan="5">Current</th>
+                                   </tr>
+                                   <tr>
+                                       <th class="country_heading">Country</th>
+                                       <th class="previous">Version</th>
+                                       <th class="previous">Build #</th>
+                                       <th class="previous">Date</th>
+                                       <th class="previous">Branch</th>
+                                       <th class="previous">Status</th>
+
+                                       <th>Version</th>
+                                       <th>Build #</th>
+                                       <th>Date</th>
+                                       <th>Branch</th>
+                                       <th>Status</th>
+                                   </tr>
+                                   </thead>
+                                   <tbody data-bind="foreach: environment(), visible: environment().length > 0">
+                                       <tr data-bind="click: $parent.onCountryClick">
+                                           <td class="country" data-bind="text: name"></td>
+                                           <td class="previous" data-bind="text: previousDeploymentStats.artifactVersion"></td>
+                                           <td class="previous" data-bind="text: previousDeploymentStats.buildNumber"></td>
+                                           <td class="previous" data-bind="text: previousDeploymentStats.dateDisplay"></td>
+                                           <td class="previous" data-bind="text: previousDeploymentStats.branchName"></td>
+                                           <td class="previous" data-bind="text: previousDeploymentStats.status"></td>
+
+                                           <td class="current" data-bind="text: currentDeploymentStats.artifactVersion"></td>
+                                           <td class="current" data-bind="text: currentDeploymentStats.buildNumber"></td>
+                                           <td class="current" data-bind="text: currentDeploymentStats.dateDisplay"></td>
+                                           <td class="current" data-bind="text: currentDeploymentStats.branchName"></td>
+                                           <td class="current" data-bind="text: currentDeploymentStats.status"></td>
+                                       </tr>
+                                   </tbody>
+                               </table>
+                            </div>
+
+                           <div id="id01" class="w3-modal" style="display: none">
+                               <div class="w3-modal-content">
+                                   <header class="w3-container modal-header"><span
+                                           onclick="document.getElementById('id01').style.display='none'"
+                                           class="w3-button w3-display-topright">X</span>
+                                       <h2>History: Kenya</h2></header>
+                                   <div class="w3-modal-content">
+                                       <table id="history_modal" class="modal-table">
+                                           <thead>
+                                           <tr>
+                                               <th>Version</th>
+                                               <th>Build #</th>
+                                               <th>Date</th>
+                                               <th>Branch</th>
+                                               <th>Status</th>
+                                           </tr>
+                                           </thead>
+                                           <tbody data-bind="foreach: selectedCountryStats(), visible: selectedCountryStats().length > 0">
+                                           <tr>
+                                               <td data-bind="text: artifactVersion"></td>
+                                               <td data-bind="text: buildNumber"></td>
+                                               <td data-bind="text: dateDisplay"></td>
+                                               <td data-bind="text: branchName"></td>
+                                               <td data-bind="text: status"></td>
+                                           </tr>
+                                           </tbody>
+                                       </table>
+                                   </div>
+                               </div>
+                           </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div class="w3-card-4 card-background">
+                        <div class="w3-panel w3-round action-item">
+                            <h3>3 Deploy</h3>
+                        </div>
+                        <div class="w3-panel card-footer">
+                            <div class="w3-panel w3-round sub-item">
+                                <h5>Select a branch</h5>
+                            </div>
+                            <div class="w3-panel card-footer">
+                                <select id="artifact-lists" class="w3-select w3-border">
+                                    <option value="">release/master</option>
+                                    <option value="">master</option>
+                                </select>
+                            </div>
+                            <div class="w3-panel w3-round sub-item">
+                                <h5>Select a version</h5>
+                            </div>
+                            <div class="w3-panel card-footer">
+                                <select id="artifact-list" class="w3-select w3-border">
+                                    <option value="">1.1</option>
+                                    <option value="">11.2</option>
+                                    <option value="">33.3</option>
+                                </select>
+                            </div>
+                            <div class="w3-panel w3-round sub-item">
+                                <h5>Select a country</h5>
+                            </div>
+                            <div class="w3-panel card-footer">
+                                <ul class="w3-ul">
+                                    <li class="w3-hover-green"><input class="w3-check" type="checkbox" checked="checked"></input> All</li>
+                                    <li class="w3-hover-green"><input class="w3-check" type="checkbox" checked="checked"></input> Kenya</li>
+                                    <li class="w3-hover-green"><input class="w3-check" type="checkbox" checked="checked"></input> Mauritius</li>
+                                    <li class="w3-hover-green"><input class="w3-check" type="checkbox" checked="checked"></input> South Africa</li>
+                                </ul>
+                            </div>
+                            <button class="w3-btn w3-green w3-hover-red w3-round-large">Deploy</button>
+                        </div>
+                    </div>
+               </div>
+           </div>
 
 
-            </style>
-
-            <h1>
-                Deployment History
-            </h1>
-
-           <h3>Choose an environment:</h3>
-           <select id="environment-list" data-bind="options: $root.environments, value: env, optionsText: 'deploymentEnv'">
-           </select>
-
-            <br/>
-            <br/>
-            <br/>
-           <table id="history">
-               <thead>
-               <tr>
-                   <th class="country_heading" colspan="1"></th>
-                   <th class="previous" colspan="5">Previous</th>
-                   <th colspan="5">Current</th>
-               </tr>
-               <tr>
-                   <th class="country_heading">Country</th>
-                   <th class="previous">Version</th>
-                   <th class="previous">Build #</th>
-                   <th class="previous">Date</th>
-                   <th class="previous">Branch</th>
-                   <th class="previous">Status</th>
-
-                   <th>Version</th>
-                   <th>Build #</th>
-                   <th>Date</th>
-                   <th>Branch</th>
-                   <th>Status</th>
-               </tr>
-               </thead>
-               <tbody data-bind="foreach: environment(), visible: environment().length > 0">
-                   <tr>
-                       <td class="country" data-bind="text: name"></td>
-                       <td class="previous" data-bind="text: previousDeploymentStats.artifactVersion"></td>
-                       <td class="previous" data-bind="text: previousDeploymentStats.buildNumber"></td>
-                       <td class="previous" data-bind="text: previousDeploymentStats.dateDisplay"></td>
-                       <td class="previous" data-bind="text: previousDeploymentStats.branchName"></td>
-                       <td class="previous" data-bind="text: previousDeploymentStats.status"></td>
-
-                       <td class="current" data-bind="text: currentDeploymentStats.artifactVersion"></td>
-                       <td class="current" data-bind="text: currentDeploymentStats.buildNumber"></td>
-                       <td class="current" data-bind="text: currentDeploymentStats.dateDisplay"></td>
-                       <td class="current" data-bind="text: currentDeploymentStats.branchName"></td>
-                       <td class="current" data-bind="text: currentDeploymentStats.status"></td>
-                   </tr>
-               </tbody>
-           </table>
+           <div id="settings_tab" class="tab" style="display:none">
+               <h2>Setting</h2>
+           </div>
 
     <script>
 
@@ -120,6 +272,9 @@
                             deploymentEnv: undefined
                         },
                         {
+                            deploymentEnv: "PERFORMANCE"
+                        },
+                        {
                             deploymentEnv: "DEV"
                         },
                         {
@@ -127,6 +282,9 @@
                         },
                         {
                             deploymentEnv: "UAT"
+                        },
+                        {
+                            deploymentEnv: "PRE-PROD"
                         },
                         {
                             deploymentEnv: "PROD"
@@ -137,9 +295,24 @@
                         if(event.deploymentEnv !== undefined)
                             getDeploymentStatisticsForEnvironment(event.deploymentEnv)
                     });
+                    this.selectedCountryStats = ko.observableArray([])
 
 
                     this.environment = ko.observableArray([])
+                    this.onCountryClick = function(click) {
+                        document.getElementById('id01').style.display='block'
+                        if(click.deploymentStats) {
+                            while(appModel.selectedCountryStats().length > 0) {
+                                appModel.selectedCountryStats.pop()
+                            }
+
+                            click.deploymentStats.forEach(function(stat){
+                                appModel.selectedCountryStats.push(stat)
+                            })
+
+                        }
+
+                    }
 
                 }
 
@@ -171,6 +344,22 @@
                                                 }
                                             }
                     });
+                }
+
+                function openTab(evt, id) {
+                    var x = document.getElementsByClassName('tab')
+
+                    x.forEach(function(element){
+                        element.style.display = 'none'
+                    })
+
+                    var links = document.getElementsByClassName('w3-bar-item')
+                    links.forEach(function(link){
+                        link.className = link.className.replace(' nav_bar_selected', '')
+                    })
+
+                    document.getElementById(id).style.display = 'block'
+                    evt.currentTarget.className = evt.currentTarget.className + ' nav_bar_selected'
                 }
 
                 ko.applyBindings(new AppViewModel());
