@@ -6,256 +6,290 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"></link>
         <st:include page="sidepanel.jelly" it="${it.run}" optional="true" />
         <l:main-panel>
-                    <style>
-                        #history {
-                            border-collapse: collapse;
-                            width: 100%;
-                        }
+        <style>
+                    #history {
+                        border-collapse: collapse;
+                        width: 100%;
+                    }
 
-                        #history th {
-                            padding-top: 12px;
-                            padding-bottom: 12px;
-                            text-align: left;
-                            background-color: #d1e784;
-                            color: #092834;
-                        }
+                    #history th {
+                        padding-top: 12px;
+                        padding-bottom: 12px;
+                        text-align: left;
+                        background-color: #d1e784;
+                        color: #092834;
+                    }
 
-                        #history th.previous {
-                            background-color: #092834;
-                            color: #F0F7D4;
-                        }
+                    #history th.previous {
+                        background-color: #092834;
+                        color: #F0F7D4;
+                    }
 
-                        #history th.country_heading {
-                            background-color: #F0F7D4;
-                            color: black;
-                        }
+                    #history th.country_heading {
+                        background-color: #F0F7D4;
+                        color: black;
+                    }
 
-                        .current {
-                            background-color: #d1e784;
-                            color: #092834;
-                        }
+                    .current {
+                        background-color: #d1e784;
+                        color: #092834;
+                    }
 
-                        .country {
-                            background-color: #F0F7D4;
-                            color: #black;
-                        }
+                    .country {
+                        background-color: #F0F7D4;
+                        color: #black;
+                    }
 
-                        .modal-header {
-                            background-color: #B2D732;
-                            color: #black;
-                        }
+                    .modal-header {
+                        background-color: #B2D732;
+                        color: #black;
+                    }
 
-                        .modal-table {
-                            background-color: #F0F7D4;
-                            color: #black;
-                            width: 100%;
-                        }
+                    .modal-table {
+                        background-color: #F0F7D4;
+                        color: #black;
+                        width: 100%;
+                    }
 
-                        .previous {
-                            background-color: #092834;
-                            color: #F0F7D4;
-                        }
+                    .previous {
+                        background-color: #092834;
+                        color: #F0F7D4;
+                    }
 
-                        #history > tbody > tr:hover {
-                            opacity: 0.75;
-                        }
+                    #history > tbody > tr:hover {
+                        opacity: 0.75;
+                    }
 
-                        #history_modal > thead > tr > th {
-                            text-align: left;
-                        }
+                    #history_modal > thead > tr > th {
+                        text-align: left;
+                    }
 
-                        #history_modal > tbody > tr:hover {
-                            opacity: 0.8;
-                            background-color: #092834;
-                            color: #F0F7D4;
-                        }
+                    #history_modal > tbody > tr:hover {
+                        opacity: 0.8;
+                        background-color: #092834;
+                        color: #F0F7D4;
+                    }
 
-                        .nav_bar {
-                            color: #F0F7D4!important;
-                            background-color: #092834!important;
+                    .nav_bar {
+                        color: #F0F7D4!important;
+                        background-color: #092834!important;
 
-                        }
+                    }
 
-                        .nav_bar_selected {
-                            color: black!important;
-                            background-color: #B2D732!important;
+                    .nav_bar_selected {
+                        color: black!important;
+                        background-color: #B2D732!important;
 
-                        }
+                    }
 
-                        .action-item {
-                            color: #black!important;
-                            background-color: #B2D732!important;
-                        }
+                    .action-item {
+                        color: #black!important;
+                        background-color: #B2D732!important;
+                    }
 
-                        .sub-item {
-                            color: #black!important;
-                            background-color: #d1e784!important;
-                        }
+                    .sub-item {
+                        color: #black!important;
+                        background-color: #d1e784!important;
+                    }
 
-                        .card-footer {
-                            padding-bottom: 1em;
-                        }
+                    .card-footer {
+                        padding-bottom: 1em;
+                    }
 
-                        .card-background {
-                            background-color: #f0f7d6;
-                        }
+                    .card-background {
+                        background-color: #f0f7d6;
+                    }
 
-                        .page {
-                            background-color: #fafdf3;
-                        }
+                    .page {
+                        background-color: #fafdf3;
+                    }
 
 
 
-                    </style>
+                </style>
 
-            <div class="w3-bar nav_bar">
-                <button class="w3-bar-item w3-button nav_bar_selected" onclick="openTab(event, 'history_tab')">History</button>
-                <button class="w3-bar-item w3-button" onclick="openTab(event, 'settings_tab')">Settings</button>
-            </div>
-
-            <div id="history_tab" class="tab">
-                <div class="w3-container page">
-                    <div class="w3-card-4 card-background">
-                        <div class="w3-panel w3-round action-item">
-                            <h3>1 Choose an environment</h3>
-                        </div>
-                        <div class="w3-panel card-footer">
-                            <select id="environment-list" class="w3-select w3-border" data-bind="options: $root.environments, value: env, optionsText: 'deploymentEnv'">
-                            </select>
-                        </div>
+        <div class="w3-bar nav_bar">
+            <button class="w3-bar-item w3-button nav_bar_selected" onclick="openTab(event, 'history_tab')">History</button>
+            <button class="w3-bar-item w3-button" onclick="openTab(event, 'settings_tab')">Settings</button>
+        </div>
+        <div id="history_tab" class="tab">
+            <div class="w3-container page">
+                <div class="w3-card-4 card-background">
+                    <div class="w3-panel w3-round action-item">
+                        <h3>1 Choose an environment</h3>
                     </div>
+                    <div class="w3-panel card-footer">
+                        <select id="environment-list" class="w3-select w3-border" data-bind="options: $root.environments, value: env, optionsText: 'deploymentEnv'">
+                        </select>
+                    </div>
+                </div>
+                <br/><br/><br/>
+                <div class="w3-card-4 card-background">
+                    <div class="w3-panel w3-round action-item">
+                        <h3>2 View history</h3>
+                    </div>
+                    <div class="w3-panel card-footer">
+                        <table id="history">
+                        <thead>
+                        <tr>
+                            <th class="country_heading" colspan="1"></th>
+                            <th class="previous" colspan="5">Previous</th>
+                            <th colspan="5">Current</th>
+                        </tr>
+                        <tr>
+                            <th class="country_heading">Country</th>
+                            <th class="previous">Version</th>
+                            <th class="previous">Build #</th>
+                            <th class="previous">Date</th>
+                            <th class="previous">Branch</th>
+                            <th class="previous">Status</th>
 
-                    <br/>
-                    <br/>
-                    <br/>
-                    <div class="w3-card-4 card-background">
-                            <div class="w3-panel w3-round action-item">
-                                <h3>2 View history</h3>
+                            <th>Version</th>
+                            <th>Build #</th>
+                            <th>Date</th>
+                            <th>Branch</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody data-bind="foreach: environment(), visible: environment().length > 0">
+                        <tr data-bind="click: $parent.onCountryClick">
+                            <td class="country" data-bind="text: name"></td>
+                            <td class="previous" data-bind="text: previousDeploymentStats.artifactVersion"></td>
+                            <td class="previous" data-bind="text: previousDeploymentStats.buildNumber"></td>
+                            <td class="previous" data-bind="text: previousDeploymentStats.dateDisplay"></td>
+                            <td class="previous" data-bind="text: previousDeploymentStats.branchName"></td>
+                            <td class="previous" data-bind="text: previousDeploymentStats.status"></td>
+
+                            <td class="current" data-bind="text: currentDeploymentStats.artifactVersion"></td>
+                            <td class="current" data-bind="text: currentDeploymentStats.buildNumber"></td>
+                            <td class="current" data-bind="text: currentDeploymentStats.dateDisplay"></td>
+                            <td class="current" data-bind="text: currentDeploymentStats.branchName"></td>
+                            <td class="current" data-bind="text: currentDeploymentStats.status"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div id="id01" class="w3-modal" style="display: none">
+                        <div class="w3-modal-content">
+                            <header class="w3-container modal-header"><span
+                                    onclick="document.getElementById('id01').style.display='none'"
+                                    class="w3-button w3-display-topright">X</span>
+                                <h2>History: <span data-bind="text: selectedCountryName()"></span></h2></header>
+                            <div class="w3-modal-content">
+                                <table id="history_modal" class="modal-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Version</th>
+                                        <th>Build #</th>
+                                        <th>Date</th>
+                                        <th>Branch</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody data-bind="foreach: selectedCountryStats(), visible: selectedCountryStats().length > 0">
+                                    <tr>
+                                        <td data-bind="text: artifactVersion"></td>
+                                        <td data-bind="text: buildNumber"></td>
+                                        <td data-bind="text: dateDisplay"></td>
+                                        <td data-bind="text: branchName"></td>
+                                        <td data-bind="text: status"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
-                            <div class="w3-panel card-footer">
-                               <table id="history">
-                                   <thead>
-                                   <tr>
-                                       <th class="country_heading" colspan="1"></th>
-                                       <th class="previous" colspan="5">Previous</th>
-                                       <th colspan="5">Current</th>
-                                   </tr>
-                                   <tr>
-                                       <th class="country_heading">Country</th>
-                                       <th class="previous">Version</th>
-                                       <th class="previous">Build #</th>
-                                       <th class="previous">Date</th>
-                                       <th class="previous">Branch</th>
-                                       <th class="previous">Status</th>
-
-                                       <th>Version</th>
-                                       <th>Build #</th>
-                                       <th>Date</th>
-                                       <th>Branch</th>
-                                       <th>Status</th>
-                                   </tr>
-                                   </thead>
-                                   <tbody data-bind="foreach: environment(), visible: environment().length > 0">
-                                       <tr data-bind="click: $parent.onCountryClick">
-                                           <td class="country" data-bind="text: name"></td>
-                                           <td class="previous" data-bind="text: previousDeploymentStats.artifactVersion"></td>
-                                           <td class="previous" data-bind="text: previousDeploymentStats.buildNumber"></td>
-                                           <td class="previous" data-bind="text: previousDeploymentStats.dateDisplay"></td>
-                                           <td class="previous" data-bind="text: previousDeploymentStats.branchName"></td>
-                                           <td class="previous" data-bind="text: previousDeploymentStats.status"></td>
-
-                                           <td class="current" data-bind="text: currentDeploymentStats.artifactVersion"></td>
-                                           <td class="current" data-bind="text: currentDeploymentStats.buildNumber"></td>
-                                           <td class="current" data-bind="text: currentDeploymentStats.dateDisplay"></td>
-                                           <td class="current" data-bind="text: currentDeploymentStats.branchName"></td>
-                                           <td class="current" data-bind="text: currentDeploymentStats.status"></td>
-                                       </tr>
-                                   </tbody>
-                               </table>
-                            </div>
-
-                           <div id="id01" class="w3-modal" style="display: none">
-                               <div class="w3-modal-content">
-                                   <header class="w3-container modal-header"><span
-                                           onclick="document.getElementById('id01').style.display='none'"
-                                           class="w3-button w3-display-topright">X</span>
-                                       <h2>History: Kenya</h2></header>
-                                   <div class="w3-modal-content">
-                                       <table id="history_modal" class="modal-table">
-                                           <thead>
-                                           <tr>
-                                               <th>Version</th>
-                                               <th>Build #</th>
-                                               <th>Date</th>
-                                               <th>Branch</th>
-                                               <th>Status</th>
-                                           </tr>
-                                           </thead>
-                                           <tbody data-bind="foreach: selectedCountryStats(), visible: selectedCountryStats().length > 0">
-                                           <tr>
-                                               <td data-bind="text: artifactVersion"></td>
-                                               <td data-bind="text: buildNumber"></td>
-                                               <td data-bind="text: dateDisplay"></td>
-                                               <td data-bind="text: branchName"></td>
-                                               <td data-bind="text: status"></td>
-                                           </tr>
-                                           </tbody>
-                                       </table>
-                                   </div>
-                               </div>
-                           </div>
-                    </div>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <div class="w3-card-4 card-background">
-                        <div class="w3-panel w3-round action-item">
-                            <h3>3 Deploy</h3>
                         </div>
-                        <div class="w3-panel card-footer">
+                    </div>
+                </div>
+                <br/><br/><br/>
+                <div class="w3-card-4 card-background">
+                    <div class="w3-panel w3-round action-item">
+                        <h3>3 Deploy</h3>
+                    </div>
+                    <div class="w3-panel card-footer">
+                        <input class="w3-radio" type="radio" name="deployment-type" value="promote" data-bind="checked: releaseType"></input>
+                        <label>Promote release</label>
+
+                        <input class="w3-radio" type="radio" name="deployment-type" value="new" data-bind="checked: releaseType"></input>
+                        <label>Create new release</label>
+
+                        <div data-bind="visible: releaseType() === 'promote'" class="promote_release_view">
                             <div class="w3-panel w3-round sub-item">
                                 <h5>Select a branch</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <select id="artifact-lists" class="w3-select w3-border">
-                                    <option value="">release/master</option>
-                                    <option value="">master</option>
+                                <select id="branch-list" class="w3-select w3-border" data-bind="options: $root.availableDeployments.availableBranches, value: selectedBranch">
                                 </select>
                             </div>
                             <div class="w3-panel w3-round sub-item">
                                 <h5>Select a version</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <select id="artifact-list" class="w3-select w3-border">
-                                    <option value="">1.1</option>
-                                    <option value="">11.2</option>
-                                    <option value="">33.3</option>
+                                <select id="artifact-list" class="w3-select w3-border" data-bind="options: $root.availableDeployments.availableArtifacts, value: selectedArtifact">
                                 </select>
                             </div>
                             <div class="w3-panel w3-round sub-item">
                                 <h5>Select a country</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <ul class="w3-ul">
-                                    <li class="w3-hover-green"><input class="w3-check" type="checkbox" checked="checked"></input> All</li>
-                                    <li class="w3-hover-green"><input class="w3-check" type="checkbox" checked="checked"></input> Kenya</li>
-                                    <li class="w3-hover-green"><input class="w3-check" type="checkbox" checked="checked"></input> Mauritius</li>
-                                    <li class="w3-hover-green"><input class="w3-check" type="checkbox" checked="checked"></input> South Africa</li>
+                                <ul class="w3-ul" data-bind="foreach: deployableCountriesList()">
+                                    <li class="w3-hover-green">
+                                        <input class="w3-check" type="checkbox" data-bind="checkedValue: $data, checked: $root.selectedDeployableCountries"/>
+                                        <span data-bind="text: $data"></span>
+                                    </li>
                                 </ul>
                             </div>
-                            <button class="w3-btn w3-green w3-hover-red w3-round-large">Deploy</button>
                         </div>
+                        <div data-bind="visible: releaseType() === 'new'" class="create_release_view">
+                            <div class="w3-panel w3-round sub-item">
+                                <h5>Select a branch</h5>
+                            </div>
+                            <div class="w3-panel card-footer">
+                                <select id="branch-list" class="w3-select w3-border" data-bind="options: $root.availableDeployments.availableBranches, value: selectedBranch">
+                                </select>
+                            </div>
+                            <div class="w3-panel w3-round sub-item">
+                                <h5>Select a build number</h5>
+                            </div>
+                            <div class="w3-panel card-footer">
+                                <select id="build-list" class="w3-select w3-border" data-bind="options: $root.availableDeployments.availableBuilds, value: selectedBuild">
+                                </select>
+                            </div>
+                            <div class="w3-panel w3-round sub-item">
+                                <h5>Enter a major version</h5>
+                            </div>
+                            <div class="w3-panel card-footer">
+                                <input class="w3-input w3-border" data-bind="textInput: majorVersion" name="majorVersion" type="text" placeholder="13, 14 or 15 etc."/>
+                            </div>
+
+                            <div class="w3-panel w3-round sub-item">
+                                <h5>Select a country</h5>
+                            </div>
+                            <div class="w3-panel card-footer">
+                                <ul class="w3-ul" data-bind="foreach: deployableCountriesList()">
+                                    <li class="w3-hover-green">
+                                        <input class="w3-check" type="checkbox" data-bind="checkedValue: $data, checked: $root.selectedDeployableCountries"/>
+                                        <span data-bind="text: $data"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <button data-bind="visible: releaseType() === 'promote' || releaseType() === 'new',
+                                            enable: isDeployable,
+                                            click: deploy"
+                                class="w3-btn w3-green w3-hover-red w3-round-large">Deploy</button>
                     </div>
-               </div>
-           </div>
+                </div>
 
+            </div>
+        </div>
 
-           <div id="settings_tab" class="tab" style="display:none">
-               <h2>Setting</h2>
-           </div>
+        <div id="settings_tab" class="tab" style="display:none">
+            <h2>Settings</h2>
+        </div>
 
-    <script>
+    <script>//<![CDATA[
 
                 ko.observableArray.fn.find = function(prop, data) {
                     var valueToMatch = data[prop];
@@ -295,13 +329,89 @@
                         if(event.deploymentEnv !== undefined)
                             getDeploymentStatisticsForEnvironment(event.deploymentEnv)
                     });
-                    this.selectedCountryStats = ko.observableArray([])
 
+                    this.selectedCountryStats = ko.observableArray([])
+                    this.selectedCountryName = ko.observable('');
 
                     this.environment = ko.observableArray([])
+
+                    this.availableDeployments = {
+                        availableBranches: [undefined, 'master', 'release/shaka'],
+                        availableBuilds: ['1', '2', '4', '5', '6', '7'],
+                        availableArtifacts: ['1.9', '2.8', '4.7', '5.6', '6.4', '7.2'],
+                        branches: [{
+                            name: 'master',
+                            builds: ['1', '2', '4', '5', '6', '7']
+                        },
+                        {
+                            name: 'release/shaka',
+                            builds: ['11', '12', '14', '15', '16', '17']
+                        }
+                        ]
+                    };
+                    this.selectedBranch = ko.observable('');
+                    this.selectedBranch.subscribe(function(event){
+                        appModel.isDeployable(appModel.canDeploy());
+                    });
+                    this.releaseType = ko.observable('');
+                    this.selectedDeployableCountries = ko.observableArray([]);
+                    this.deployableCountriesList = ko.observableArray([
+                       'All', 'Kenya', 'Mauritius', 'South Africa'
+                    ]);
+                    this.majorVersion = ko.observable('');
+                    this.majorVersion.subscribe(function(event){
+                        appModel.isDeployable(appModel.canDeploy());
+                    });
+                    this.selectedBuild = ko.observable('');
+                    this.selectedBuild.subscribe(function(event){
+                        appModel.isDeployable(appModel.canDeploy());
+                    });
+                    this.selectedArtifact = ko.observable('');
+                    this.selectedArtifact.subscribe(function(event){
+                        appModel.isDeployable(appModel.canDeploy());
+                    });
+
+                    this.selectedDeployableCountries.subscribe(function(selected){
+                        if(selected && selected.length > 0){
+                            var isAllChecked = selected.find(function(country){
+                                return country === 'All'
+                            });
+                            if(isAllChecked){
+                                while (selected.length > 0) {
+                                    appModel.selectedDeployableCountries().pop()
+                                }
+
+                                appModel.deployableCountriesList().forEach(function (stat) {
+                                    appModel.selectedDeployableCountries().push(stat)
+                                })
+                            }
+                        }
+                        appModel.isDeployable(appModel.canDeploy());
+                    });
+
+                    this.isDeployable = ko.observable(false);
+
+                    this.canDeploy = function () {
+                        if(appModel.releaseType() === 'promote'){
+                            return (appModel.selectedArtifact() && appModel.selectedArtifact() !== '')
+                                    && (appModel.selectedBranch() && appModel.selectedBranch() !== '')
+                                    && (appModel.selectedDeployableCountries() && appModel.selectedDeployableCountries().length > 0)
+
+                        } else if(appModel.releaseType() === 'new'){
+                            return (appModel.selectedBuild() && appModel.selectedBuild() !== '')
+                                && (appModel.selectedBranch() && appModel.selectedBranch() !== '')
+                                && (appModel.majorVersion() && appModel.majorVersion() !== '')
+                                && (appModel.selectedDeployableCountries() && appModel.selectedDeployableCountries().length > 0)
+
+                        } else{
+                            return false;
+                        }
+                    };
+
                     this.onCountryClick = function(click) {
                         document.getElementById('id01').style.display='block'
                         if(click.deploymentStats) {
+                            appModel.selectedCountryName(click.name);
                             while(appModel.selectedCountryStats().length > 0) {
                                 appModel.selectedCountryStats.pop()
                             }
@@ -312,6 +422,47 @@
 
                         }
 
+                    }
+
+                    this.deploy = function () {
+                        var deploymentCountryParam = '';
+                        var buildNumberParam = '';
+                        var branchNameParam = '';
+                        var majorVersionParam = '';
+                        var appNameParam = '&APP_NAME=TMO';
+                        var urlParams = '?';
+                        if(appModel.releaseType() === 'new') {
+                            buildNumberParam = 'BUILD_NUMBER=' + appModel.selectedBuild();
+                            branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch());
+                            majorVersionParam = '&VERSION=' + appModel.majorVersion();
+
+                        } else if(appModel.releaseType() === 'promote') {
+                            var splitArtifact = appModel.selectedArtifact().split(".");
+                            buildNumberParam = 'BUILD_NUMBER=' + splitArtifact[1];
+                            branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch());
+                            majorVersionParam = '&VERSION=' + splitArtifact[0];
+
+                        } else {
+                            throw new Error('Unknown release type')
+                        }
+
+
+                        if(appModel.selectedDeployableCountries().find(function(country){
+                            return country === 'All'
+                        })){
+                            appModel.deployableCountriesList().forEach(function (country) {
+                                if(country !== 'All') {
+                                    deploymentCountryParam = deploymentCountryParam + 'SKIP_'+country.replace(' ','_').toUpperCase()+'_INPUT=trueamper';
+                                }
+                            })
+
+                        } else {
+                            appModel.selectedDeployableCountries().forEach(function(country){
+                                deploymentCountryParam = deploymentCountryParam + 'SKIP_'+country.replace(' ','_').toUpperCase()+'_INPUT=trueamper';
+                            });
+                        }
+                        urlParams = urlParams + deploymentCountryParam + buildNumberParam + branchNameParam + majorVersionParam + appNameParam;
+                        console.log(encodeURI(urlParams));
                     }
 
                 }
@@ -346,6 +497,18 @@
                     });
                 }
 
+                function getDeploymentDetails(){
+                    new Ajax.Request('getDeploymentDetails', {
+                                            method: 'GET',
+                                            parameters: {},
+                                            onSuccess: function(response) {
+                                                if(response.responseJSON){
+                                                    appModel.env(response.responseJSON)
+                                                }
+                                            }
+                    });
+                }
+
                 function openTab(evt, id) {
                     var x = document.getElementsByClassName('tab')
 
@@ -366,7 +529,7 @@
                 getProjectDetails()
 
 
-        </script>
+        //]]></script>
         </l:main-panel>
     </l:layout>
 
