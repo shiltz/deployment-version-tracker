@@ -21,8 +21,8 @@
                     }
 
                     #history th.previous {
-                        background-color: #092834;
-                        color: #F0F7D4;
+                        background-color: #e1efad;
+                        color: black;
                     }
 
                     #history th.country_heading {
@@ -52,12 +52,13 @@
                     }
 
                     .previous {
-                        background-color: #092834;
-                        color: #F0F7D4;
+                        background-color: #e1efad;
+                        color: black;
                     }
 
-                    #history > tbody > tr:hover {
-                        opacity: 0.75;
+                    #history > tbody > tr:hover td {
+                        background-color: #B2D732!important;
+                        color: black;
                     }
 
                     #history_modal > thead > tr > th {
@@ -65,9 +66,8 @@
                     }
 
                     #history_modal > tbody > tr:hover {
-                        opacity: 0.8;
-                        background-color: #092834;
-                        color: #F0F7D4;
+                        background-color: #B2D732;
+                        color: black;
                     }
 
                     .nav_bar {
@@ -154,17 +154,17 @@
                         <tbody data-bind="foreach: environment(), visible: environment().length > 0">
                         <tr data-bind="click: $parent.onCountryClick">
                             <td class="country" data-bind="text: name"></td>
-                            <td class="previous" data-bind="text: previousDeploymentStats.artifactVersion"></td>
-                            <td class="previous" data-bind="text: previousDeploymentStats.buildNumber"></td>
-                            <td class="previous" data-bind="text: previousDeploymentStats.dateDisplay"></td>
-                            <td class="previous" data-bind="text: previousDeploymentStats.branchName"></td>
-                            <td class="previous" data-bind="text: previousDeploymentStats.status"></td>
+                            <td class="previous" data-bind="if: previousDeploymentStats"><span data-bind="text: previousDeploymentStats.artifactVersion"></span></td>
+                            <td class="previous" data-bind="if: previousDeploymentStats"><span data-bind="text: previousDeploymentStats.buildNumber"></span></td>
+                            <td class="previous" data-bind="if: previousDeploymentStats"><span data-bind="text: previousDeploymentStats.dateDisplay"></span></td>
+                            <td class="previous" data-bind="if: previousDeploymentStats"><span data-bind="text: previousDeploymentStats.branchName"></span></td>
+                            <td class="previous" data-bind="if: previousDeploymentStats"><span data-bind="text: previousDeploymentStats.status"></span></td>
 
-                            <td class="current" data-bind="text: currentDeploymentStats.artifactVersion"></td>
-                            <td class="current" data-bind="text: currentDeploymentStats.buildNumber"></td>
-                            <td class="current" data-bind="text: currentDeploymentStats.dateDisplay"></td>
-                            <td class="current" data-bind="text: currentDeploymentStats.branchName"></td>
-                            <td class="current" data-bind="text: currentDeploymentStats.status"></td>
+                            <td class="current" data-bind="if: currentDeploymentStats"><span data-bind="text: currentDeploymentStats.artifactVersion"></span></td>
+                            <td class="current" data-bind="if: currentDeploymentStats"><span data-bind="text: currentDeploymentStats.buildNumber"></span></td>
+                            <td class="current" data-bind="if: currentDeploymentStats"><span data-bind="text: currentDeploymentStats.dateDisplay"></span></td>
+                            <td class="current" data-bind="if: currentDeploymentStats"><span data-bind="text: currentDeploymentStats.branchName"></span></td>
+                            <td class="current" data-bind="if: currentDeploymentStats"><span data-bind="text: currentDeploymentStats.status"></span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -218,21 +218,21 @@
                                 <h5>Select a branch</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <select id="branch-list" class="w3-select w3-border" data-bind="options: $root.availableDeployments.availableBranches, value: selectedBranch">
+                                <select id="branch-list" class="w3-select w3-border" data-bind="options: $root.deploymentDetail().deployable, optionsText: 'branchName', value: selectedBranch">
                                 </select>
                             </div>
                             <div class="w3-panel w3-round sub-item">
                                 <h5>Select a version</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <select id="artifact-list" class="w3-select w3-border" data-bind="options: $root.availableDeployments.availableArtifacts, value: selectedArtifact">
+                                <select id="artifact-list" class="w3-select w3-border" data-bind="options: $root.availableArtifacts(), value: selectedArtifact">
                                 </select>
                             </div>
                             <div class="w3-panel w3-round sub-item">
                                 <h5>Select a country</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <ul class="w3-ul" data-bind="foreach: deployableCountriesList()">
+                                <ul class="w3-ul" data-bind="foreach: deploymentDetail().deployableCountriesList">
                                     <li class="w3-hover-green">
                                         <input class="w3-check" type="checkbox" data-bind="checkedValue: $data, checked: $root.selectedDeployableCountries"/>
                                         <span data-bind="text: $data"></span>
@@ -245,14 +245,14 @@
                                 <h5>Select a branch</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <select id="branch-list" class="w3-select w3-border" data-bind="options: $root.availableDeployments.availableBranches, value: selectedBranch">
+                                <select id="branch-list" class="w3-select w3-border" data-bind="options: $root.deploymentDetail().deployable, optionsText: 'branchName', value: selectedBranch">
                                 </select>
                             </div>
                             <div class="w3-panel w3-round sub-item">
                                 <h5>Select a build number</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <select id="build-list" class="w3-select w3-border" data-bind="options: $root.availableDeployments.availableBuilds, value: selectedBuild">
+                                <select id="build-list" class="w3-select w3-border" data-bind="options: $root.availableBuilds(), value: selectedBuild">
                                 </select>
                             </div>
                             <div class="w3-panel w3-round sub-item">
@@ -266,7 +266,7 @@
                                 <h5>Select a country</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <ul class="w3-ul" data-bind="foreach: deployableCountriesList()">
+                                <ul class="w3-ul" data-bind="foreach: deploymentDetail().deployableCountriesList">
                                     <li class="w3-hover-green">
                                         <input class="w3-check" type="checkbox" data-bind="checkedValue: $data, checked: $root.selectedDeployableCountries"/>
                                         <span data-bind="text: $data"></span>
@@ -335,29 +335,30 @@
 
                     this.environment = ko.observableArray([])
 
-                    this.availableDeployments = {
-                        availableBranches: [undefined, 'master', 'release/shaka'],
-                        availableBuilds: ['1', '2', '4', '5', '6', '7'],
-                        availableArtifacts: ['1.9', '2.8', '4.7', '5.6', '6.4', '7.2'],
-                        branches: [{
-                            name: 'master',
-                            builds: ['1', '2', '4', '5', '6', '7']
-                        },
-                        {
-                            name: 'release/shaka',
-                            builds: ['11', '12', '14', '15', '16', '17']
-                        }
-                        ]
-                    };
                     this.selectedBranch = ko.observable('');
+                    this.availableBuilds = ko.observable('');
+                    this.availableArtifacts = ko.observable('');
                     this.selectedBranch.subscribe(function(event){
-                        appModel.isDeployable(appModel.canDeploy());
+                        if(event){
+                            if(appModel.releaseType() === 'new'){
+                                appModel.availableBuilds(event.availableBuilds);
+                            } else {
+                                appModel.availableArtifacts(event.availableArtifacts);
+                            }
+                            appModel.isDeployable(appModel.canDeploy());
+                        }
                     });
                     this.releaseType = ko.observable('');
+                    this.releaseType.subscribe(function(event){
+                        if(event){
+                            appModel.availableBuilds('');
+                            appModel.availableArtifacts('');
+                            appModel.selectedBranch('');
+                            appModel.isDeployable(appModel.canDeploy());
+                        }
+                    });
+
                     this.selectedDeployableCountries = ko.observableArray([]);
-                    this.deployableCountriesList = ko.observableArray([
-                       'All', 'Kenya', 'Mauritius', 'South Africa'
-                    ]);
                     this.majorVersion = ko.observable('');
                     this.majorVersion.subscribe(function(event){
                         appModel.isDeployable(appModel.canDeploy());
@@ -381,7 +382,7 @@
                                     appModel.selectedDeployableCountries().pop()
                                 }
 
-                                appModel.deployableCountriesList().forEach(function (stat) {
+                                appModel.deploymentDetail().deployableCountriesList.forEach(function (stat) {
                                     appModel.selectedDeployableCountries().push(stat)
                                 })
                             }
@@ -390,6 +391,8 @@
                     });
 
                     this.isDeployable = ko.observable(false);
+
+                    this.deploymentDetail = ko.observable('');
 
                     this.canDeploy = function () {
                         if(appModel.releaseType() === 'promote'){
@@ -429,17 +432,17 @@
                         var buildNumberParam = '';
                         var branchNameParam = '';
                         var majorVersionParam = '';
-                        var appNameParam = '&APP_NAME=TMO';
+                        var appNameParam = '&APP_NAME=' + appModel.deploymentDetail().appName;
                         var urlParams = '?';
                         if(appModel.releaseType() === 'new') {
                             buildNumberParam = 'BUILD_NUMBER=' + appModel.selectedBuild();
-                            branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch());
+                            branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch().branchName);
                             majorVersionParam = '&VERSION=' + appModel.majorVersion();
 
                         } else if(appModel.releaseType() === 'promote') {
                             var splitArtifact = appModel.selectedArtifact().split(".");
                             buildNumberParam = 'BUILD_NUMBER=' + splitArtifact[1];
-                            branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch());
+                            branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch().branchName);
                             majorVersionParam = '&VERSION=' + splitArtifact[0];
 
                         } else {
@@ -450,15 +453,15 @@
                         if(appModel.selectedDeployableCountries().find(function(country){
                             return country === 'All'
                         })){
-                            appModel.deployableCountriesList().forEach(function (country) {
+                            appModel.deploymentDetail().deployableCountriesList.forEach(function (country) {
                                 if(country !== 'All') {
-                                    deploymentCountryParam = deploymentCountryParam + 'SKIP_'+country.replace(' ','_').toUpperCase()+'_INPUT=trueamper';
+                                    deploymentCountryParam = deploymentCountryParam + 'SKIP_'+country.replace(' ','_').toUpperCase()+'_INPUT=true&';
                                 }
                             })
 
                         } else {
                             appModel.selectedDeployableCountries().forEach(function(country){
-                                deploymentCountryParam = deploymentCountryParam + 'SKIP_'+country.replace(' ','_').toUpperCase()+'_INPUT=trueamper';
+                                deploymentCountryParam = deploymentCountryParam + 'SKIP_'+country.replace(' ','_').toUpperCase()+'_INPUT=true&';
                             });
                         }
                         urlParams = urlParams + deploymentCountryParam + buildNumberParam + branchNameParam + majorVersionParam + appNameParam;
@@ -503,7 +506,7 @@
                                             parameters: {},
                                             onSuccess: function(response) {
                                                 if(response.responseJSON){
-                                                    appModel.env(response.responseJSON)
+                                                    appModel.deploymentDetail(response.responseJSON);
                                                 }
                                             }
                     });
@@ -512,21 +515,25 @@
                 function openTab(evt, id) {
                     var x = document.getElementsByClassName('tab')
 
-                    x.forEach(function(element){
-                        element.style.display = 'none'
-                    })
+                    for(var i = 0; i < x.length; i++){
+                        x[i].style.display = 'none'
+                    }
+
 
                     var links = document.getElementsByClassName('w3-bar-item')
-                    links.forEach(function(link){
-                        link.className = link.className.replace(' nav_bar_selected', '')
-                    })
+
+                    for(var i = 0; i < links.length; i++){
+                        links[i].className = links[i].className.replace(' nav_bar_selected', '')
+                    }
+
 
                     document.getElementById(id).style.display = 'block'
                     evt.currentTarget.className = evt.currentTarget.className + ' nav_bar_selected'
                 }
 
                 ko.applyBindings(new AppViewModel());
-                getProjectDetails()
+                getProjectDetails();
+                getDeploymentDetails();
 
 
         //]]></script>

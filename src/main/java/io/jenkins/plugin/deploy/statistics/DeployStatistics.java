@@ -1,11 +1,16 @@
 package io.jenkins.plugin.deploy.statistics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hudson.model.Item;
 import hudson.model.Run;
+import hudson.util.RunList;
 import io.jenkins.plugin.deploy.statistics.model.CountryDeploymentStats;
+import io.jenkins.plugin.deploy.statistics.model.Deployable;
 import io.jenkins.plugin.deploy.statistics.model.DeploymentConfiguration;
+import io.jenkins.plugin.deploy.statistics.model.DeploymentDetails;
 import io.jenkins.plugin.deploy.statistics.model.Environment;
 import io.jenkins.plugin.deploy.statistics.model.Project;
+import jenkins.model.Jenkins;
 import jenkins.model.RunAction2;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.kohsuke.stapler.StaplerRequest;
@@ -17,8 +22,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 
@@ -40,7 +50,6 @@ public class DeployStatistics implements RunAction2 {
     }
     private List<Environment> getEnvironments() throws IOException {
         String history = this.readDeploymentHistory();
-        System.out.println(history);
         return new ObjectMapper().readValue(history, DeploymentConfiguration.class)
                     .getEnvironments();
     }
@@ -130,6 +139,110 @@ public class DeployStatistics implements RunAction2 {
         }
         rsp.setContentType("application/json");
         rsp.getOutputStream().write(new ObjectMapper().writeValueAsString(project).getBytes());
+        rsp.flushBuffer();
+    }
+
+    public void doGetDeploymentDetails(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+        DeploymentDetails deploymentDetails = new DeploymentDetails();
+
+
+        /** Exxample names of jobs
+         * I:sit-newpipe
+         * Ii:sit-newpipe
+         * j:sit-newpipe
+         * I:TMO MultiBranch
+         * Ii:TMO MultiBranch
+         * j:TMO MultiBranch/dev and sit jobs/master
+         * j:TMO MultiBranch/new sit deploy
+         * j:TMO MultiBranch/dev and sit jobs/release%2Fshaka
+         * I:dev and sit jobs
+         * Ii:TMO MultiBranch/dev and sit jobs
+         * j:TMO MultiBranch/dev and sit jobs/master
+         * j:TMO MultiBranch/dev and sit jobs/release%2Fshaka
+         * I:master
+         * Ii:TMO MultiBranch/dev and sit jobs/master
+         * j:TMO MultiBranch/dev and sit jobs/master
+         * I:release%2Fshaka
+         * Ii:TMO MultiBranch/dev and sit jobs/release%2Fshaka
+         * j:TMO MultiBranch/dev and sit jobs/release%2Fshaka
+         * I:new sit deploy
+         * Ii:TMO MultiBranch/new sit deploy
+         * j:TMO MultiBranch/new sit deploy
+         * project name:TMO MultiBranch/new sit deploy
+         */
+        Item item = Jenkins.getInstance().getItemByFullName("TMO MultiBranch/dev and sit jobs");
+
+        HashMap<String, Set<String>> branchArtifactMap = new HashMap<>();
+        List<Environment> environments = getEnvironments();
+        environments.forEach(environment -> {
+            environment.getCountries().forEach(country -> {
+                country.getDeploymentStats().forEach(countryDeploymentStats -> {
+                    Set<String> artifacts = branchArtifactMap.get(countryDeploymentStats.getBranchName());
+                    if(artifacts != null && artifacts.size() > 0 ){
+                        artifacts.add(countryDeploymentStats.getArtifactVersion());
+                    } else {
+                        TreeSet<String> artifactList = new TreeSet<>();
+                        artifactList.add(countryDeploymentStats.getArtifactVersion());
+                        branchArtifactMap.put(countryDeploymentStats.getBranchName(), artifactList);
+                    }
+                });
+            });
+        });
+        List<Deployable>  deployables2 = new ArrayList<>();
+        branchArtifactMap.keySet().forEach(branch -> {
+            deployables2.add(new Deployable(branch, new ArrayList<>(), new ArrayList<>(branchArtifactMap.get(branch))));
+        });
+
+
+        List<Deployable> deployables = item.getAllJobs().stream()
+                .filter(o -> o.getName().contains("master") || o.getName().contains("release"))
+                .map(o -> {
+                    List<Object> builds = new ArrayList<>();
+                    String formatted = o.getName().replace("%2F", "/");
+                    RunList runList = o.getBuilds();
+                    runList.forEach(o1 ->  builds.add(o1));
+
+                    List<String> collectBuild =  builds.stream().sorted(Comparator.comparingInt(o2 -> ((Run) (o2)).getNumber()))
+                    .map(o2 -> ((Run) (o2)).getNumber() + "")
+                    .collect(Collectors.toList());
+
+                    return new Deployable(formatted,
+                            collectBuild,
+                            new ArrayList<>());
+                }).collect(Collectors.toList());
+
+        HashMap<String, Deployable> branchDeployableMap = new HashMap<>();
+
+        deployables2.forEach(deployable -> {
+                Deployable newDeployable = new Deployable(deployable.getBranchName(), new ArrayList<>(), deployable.getAvailableArtifacts());
+                branchDeployableMap.put(deployable.getBranchName(), newDeployable);
+        });
+
+
+        deployables.forEach(deployable -> {
+            Deployable existingDeployable = branchDeployableMap.get(deployable.getBranchName());
+            if(existingDeployable != null){
+                existingDeployable.setAvailableBuilds(deployable.getAvailableBuilds());
+            } else {
+                Deployable newDeployable = new Deployable(deployable.getBranchName(), deployable.getAvailableBuilds(), new ArrayList<>());
+                branchDeployableMap.put(deployable.getBranchName(), newDeployable);
+            }
+        });
+
+
+        deploymentDetails.setDeployable(new ArrayList<>(branchDeployableMap.values()));
+
+
+        if (this.project.getFullName().contains("TMO")){
+            deploymentDetails.setAppName("TMO");
+        } else if(this.project.getFullName().contains("TMW")) {
+            deploymentDetails.setAppName("TMW");
+        } else {
+            deploymentDetails.setAppName("TRADEMANAGEMENT");
+        }
+        deploymentDetails.setProjectName(this.project.getName());
+        rsp.setContentType("application/json");
+        rsp.getOutputStream().write(new ObjectMapper().writeValueAsString(deploymentDetails).getBytes());
         rsp.flushBuffer();
     }
 
