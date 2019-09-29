@@ -5,6 +5,7 @@ import java.util.List;
 
 public class DeploymentDetails {
     private String projectName;
+    private String url;
     private String appName;
     private List<Deployable> deployable;
     private List<String> deployableCountriesList = Arrays.asList("All", "Kenya", "Mauritius", "South Africa");
@@ -39,5 +40,13 @@ public class DeploymentDetails {
 
     public void setAppName(String appName) {
         this.appName = appName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

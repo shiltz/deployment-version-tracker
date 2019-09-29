@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
 
 public class DeployStatistics implements RunAction2 {
 
+    public static final String TMO = "TMO";
+    public static final String TMW = "TMW";
     private WorkflowJob project;
     private String selectedEnv;
     private Run run;
@@ -144,6 +146,16 @@ public class DeployStatistics implements RunAction2 {
 
     public void doGetDeploymentDetails(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
         DeploymentDetails deploymentDetails = new DeploymentDetails();
+        String buildJobName = "TMO MultiBranch/dev and sit jobs";
+
+        if (this.project.getFullName().contains(TMO)){
+            deploymentDetails.setAppName(TMO);
+        } else if(this.project.getFullName().contains(TMW)) {
+            deploymentDetails.setAppName(TMW);
+        } else {
+            deploymentDetails.setAppName("TRADEMANAGEMENT");
+        }
+
 
 
         /** Exxample names of jobs
@@ -170,7 +182,7 @@ public class DeployStatistics implements RunAction2 {
          * j:TMO MultiBranch/new sit deploy
          * project name:TMO MultiBranch/new sit deploy
          */
-        Item item = Jenkins.getInstance().getItemByFullName("TMO MultiBranch/dev and sit jobs");
+        Item item = Jenkins.getInstance().getItemByFullName(buildJobName);
 
         HashMap<String, Set<String>> branchArtifactMap = new HashMap<>();
         List<Environment> environments = getEnvironments();
@@ -233,14 +245,9 @@ public class DeployStatistics implements RunAction2 {
         deploymentDetails.setDeployable(new ArrayList<>(branchDeployableMap.values()));
 
 
-        if (this.project.getFullName().contains("TMO")){
-            deploymentDetails.setAppName("TMO");
-        } else if(this.project.getFullName().contains("TMW")) {
-            deploymentDetails.setAppName("TMW");
-        } else {
-            deploymentDetails.setAppName("TRADEMANAGEMENT");
-        }
-        deploymentDetails.setProjectName(this.project.getName());
+
+        deploymentDetails.setProjectName(this.project.getFullName());
+        deploymentDetails.setUrl(Jenkins.getInstance().getRootUrl() + this.project.getUrl());
         rsp.setContentType("application/json");
         rsp.getOutputStream().write(new ObjectMapper().writeValueAsString(deploymentDetails).getBytes());
         rsp.flushBuffer();

@@ -276,9 +276,13 @@
                         </div>
 
                         <button data-bind="visible: releaseType() === 'promote' || releaseType() === 'new',
-                                            enable: isDeployable,
+                                            enable: shouldBeEnabled(),
                                             click: deploy"
                                 class="w3-btn w3-green w3-hover-red w3-round-large">Deploy</button>
+                        <div class="w3-panel w3-pale-yellow" data-bind="visible: releaseType() === 'promote' || releaseType() === 'new', if: response">
+                          <h3>Status</h3>
+                          <p data-bind="text: response().status + response().statusText"></p>
+                        </div>
                     </div>
                 </div>
 
@@ -394,6 +398,14 @@
 
                     this.deploymentDetail = ko.observable('');
 
+                    this.deployButtonDisable = ko.observable(false);
+
+                    this.shouldBeEnabled = ko.computed(function() {
+                        return !this.deployButtonDisable() && this.isDeployable();
+                    }, this);
+
+                    this.response = ko.observable();
+
                     this.canDeploy = function () {
                         if(appModel.releaseType() === 'promote'){
                             return (appModel.selectedArtifact() && appModel.selectedArtifact() !== '')
@@ -433,7 +445,7 @@
                         var branchNameParam = '';
                         var majorVersionParam = '';
                         var appNameParam = '&APP_NAME=' + appModel.deploymentDetail().appName;
-                        var urlParams = '?';
+                        var urlParams = appModel.deploymentDetail().url + 'buildWithParameters?';
                         if(appModel.releaseType() === 'new') {
                             buildNumberParam = 'BUILD_NUMBER=' + appModel.selectedBuild();
                             branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch().branchName);
@@ -466,6 +478,21 @@
                         }
                         urlParams = urlParams + deploymentCountryParam + buildNumberParam + branchNameParam + majorVersionParam + appNameParam;
                         console.log(encodeURI(urlParams));
+                        appModel.deployButtonDisable(true);
+                        new Ajax.Request(urlParams, {
+                                                    method: 'POST',
+                                                    parameters: {},
+                                                    onSuccess: function(response) {
+                                                        if(response.status === 201){
+                                                            appModel.deployButtonDisable(false);
+                                                        }
+                                                        appModel.response(response)
+                                                    },
+                                                    onFailure: function(response) {
+                                                            appModel.deployButtonDisable(false);
+                                                            appModel.response(response)
+                                                    }
+                                            });
                     }
 
                 }
