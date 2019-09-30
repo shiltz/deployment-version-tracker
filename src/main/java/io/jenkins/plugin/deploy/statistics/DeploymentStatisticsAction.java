@@ -24,6 +24,12 @@ public class DeploymentStatisticsAction extends TransientActionFactory<WorkflowJ
     @Nonnull
     @Override
     public Collection<? extends Action> createFor(@Nonnull WorkflowJob project) {
-        return Collections.singleton(new DeployStatistics(project));
+        if(project.getName().contains("deployment") ||
+                project.getName().contains("Deployment")) {
+            return Collections.singleton(new DeployStatistics(project));
+        }
+        else {
+            return Collections.EMPTY_SET;
+        }
     }
 }

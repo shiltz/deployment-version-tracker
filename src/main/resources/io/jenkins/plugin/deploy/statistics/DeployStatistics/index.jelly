@@ -310,12 +310,6 @@
                             deploymentEnv: undefined
                         },
                         {
-                            deploymentEnv: "PERFORMANCE"
-                        },
-                        {
-                            deploymentEnv: "DEV"
-                        },
-                        {
                             deploymentEnv: "SIT"
                         },
                         {
@@ -445,17 +439,17 @@
                         var branchNameParam = '';
                         var majorVersionParam = '';
                         var appNameParam = '&APP_NAME=' + appModel.deploymentDetail().appName;
-                        var urlParams = appModel.deploymentDetail().url + 'buildWithParameters?';
+                        var urlParams = appModel.deploymentDetail().url + 'buildWithParameters?token=D6B973260A7C44E7AE4622EADC959B19&';
                         if(appModel.releaseType() === 'new') {
                             buildNumberParam = 'BUILD_NUMBER=' + appModel.selectedBuild();
                             branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch().branchName);
-                            majorVersionParam = '&VERSION=' + appModel.majorVersion();
+                            majorVersionParam = '&MAJOR_VERSION=' + appModel.majorVersion();
 
                         } else if(appModel.releaseType() === 'promote') {
                             var splitArtifact = appModel.selectedArtifact().split(".");
                             buildNumberParam = 'BUILD_NUMBER=' + splitArtifact[1];
                             branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch().branchName);
-                            majorVersionParam = '&VERSION=' + splitArtifact[0];
+                            majorVersionParam = '&MAJOR_VERSION=' + splitArtifact[0];
 
                         } else {
                             throw new Error('Unknown release type')

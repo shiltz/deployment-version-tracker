@@ -149,11 +149,14 @@ public class DeployStatistics implements RunAction2 {
         String buildJobName = "TMO MultiBranch/dev and sit jobs";
 
         if (this.project.getFullName().contains(TMO)){
-            deploymentDetails.setAppName(TMO);
+            deploymentDetails.setAppName("tmo");
+            buildJobName = "Trade Management Online (TMO)/TMO MultiBranch";
         } else if(this.project.getFullName().contains(TMW)) {
-            deploymentDetails.setAppName(TMW);
+            deploymentDetails.setAppName("tmw");
+            buildJobName = "Trade Management Workflow (TMW)/Trade Management Workflow";
         } else {
             deploymentDetails.setAppName("TRADEMANAGEMENT");
+            buildJobName = "Trade Management Backend/TM Backend - Builds Latest";
         }
 
 

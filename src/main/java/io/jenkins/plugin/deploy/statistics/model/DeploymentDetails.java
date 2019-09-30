@@ -8,7 +8,21 @@ public class DeploymentDetails {
     private String url;
     private String appName;
     private List<Deployable> deployable;
-    private List<String> deployableCountriesList = Arrays.asList("All", "Kenya", "Mauritius", "South Africa");
+    private List<String> deployableCountriesList = Arrays.asList("All",
+            "Kenya",
+            "Mauritius",
+            "Ghana",
+            "Uganda",
+            "Tanzania NBC",
+            "Botswana",
+            "Mozambique",
+            "Tanzania BBT",
+            "Zambia",
+            "Seychelles",
+            "South Africa",
+            "Dev",
+            "Perf"
+    );
 
     public String getProjectName() {
         return projectName;
