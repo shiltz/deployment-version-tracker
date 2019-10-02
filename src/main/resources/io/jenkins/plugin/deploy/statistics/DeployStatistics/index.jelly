@@ -316,7 +316,7 @@
                             deploymentEnv: "UAT"
                         },
                         {
-                            deploymentEnv: "PRE-PROD"
+                            deploymentEnv: "PRE"
                         },
                         {
                             deploymentEnv: "PROD"

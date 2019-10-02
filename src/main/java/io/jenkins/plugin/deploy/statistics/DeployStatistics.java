@@ -133,10 +133,8 @@ public class DeployStatistics implements RunAction2 {
             project.setDeploymentEnv("PROD");
         } else if(this.project.getName().contains("PPE") || this.project.getName().contains("ppe")
                     || this.project.getName().contains("pre-prod") || this.project.getName().contains("PRE-PROD")){
-            project.setDeploymentEnv("PRE-PROD");
-        } else if(this.project.getName().contains("PPE") || this.project.getName().contains("ppe")){
-            project.setDeploymentEnv("PRE-PROD");
-        } else {
+            project.setDeploymentEnv("PRE");
+        }  else {
             project.setDeploymentEnv("");
         }
         rsp.setContentType("application/json");
