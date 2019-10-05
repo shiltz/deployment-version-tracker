@@ -69,6 +69,6 @@ public class CountryDeploymentStats implements Comparable<CountryDeploymentStats
 
     @Override
     public int compareTo(CountryDeploymentStats o) {
-        return this.getDate().compareTo(o.getDate());
+        return this.getDate().compareTo(o.getDate()) * -1;
     }
 }

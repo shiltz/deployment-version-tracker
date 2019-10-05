@@ -36,6 +36,7 @@ public class DeployStatistics implements RunAction2 {
 
     public static final String TMO = "TMO";
     public static final String TMW = "TMW";
+    public static final int MAX_NUMBER_OF_BRANCHES = 50;
     private WorkflowJob project;
     private String selectedEnv;
     private Run run;
@@ -80,7 +81,7 @@ public class DeployStatistics implements RunAction2 {
                     })
                     .collect(Collectors.toList());
 
-            Collections.sort(countryDeploymentStats);
+            Collections.sort(country.getDeploymentStats());
 
 
             if(countryDeploymentStats.size() > 1){
@@ -215,8 +216,9 @@ public class DeployStatistics implements RunAction2 {
                     RunList runList = o.getBuilds();
                     runList.forEach(o1 ->  builds.add(o1));
 
-                    List<String> collectBuild =  builds.stream().sorted(Comparator.comparingInt(o2 -> ((Run) (o2)).getNumber()))
+                    List<String> collectBuild =  builds.stream().sorted(Comparator.comparingInt(o2 -> ((Run) (o2)).getNumber()).reversed())
                     .map(o2 -> ((Run) (o2)).getNumber() + "")
+                    .limit(MAX_NUMBER_OF_BRANCHES)
                     .collect(Collectors.toList());
 
                     return new Deployable(formatted,
