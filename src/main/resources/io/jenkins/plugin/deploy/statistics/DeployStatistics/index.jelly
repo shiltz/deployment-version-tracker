@@ -139,13 +139,13 @@
                         <tr>
                             <th class="country_heading">Country</th>
                             <th class="previous">Version</th>
-                            <th class="previous">Build #</th>
+                            <th class="previous">Deploy #</th>
                             <th class="previous">Date</th>
                             <th class="previous">Branch</th>
                             <th class="previous">Status</th>
 
                             <th>Version</th>
-                            <th>Build #</th>
+                            <th>Deploy #</th>
                             <th>Date</th>
                             <th>Branch</th>
                             <th>Status</th>
@@ -180,7 +180,7 @@
                                     <thead>
                                     <tr>
                                         <th>Version</th>
-                                        <th>Build #</th>
+                                        <th>Deploy #</th>
                                         <th>Date</th>
                                         <th>Branch</th>
                                         <th>Status</th>
@@ -370,12 +370,14 @@
                         appModel.isDeployable(appModel.canDeploy());
                     });
 
+                    this.isAllSelected = false;
                     this.selectedDeployableCountries.subscribe(function(selected){
                         if(selected && selected.length > 0){
                             var isAllChecked = selected.find(function(country){
                                 return country === 'All'
                             });
-                            if(isAllChecked){
+                            if(isAllChecked && !appModel.isAllSelected){
+                                appModel.isAllSelected = true;
                                 while (selected.length > 0) {
                                     appModel.selectedDeployableCountries().pop()
                                 }
@@ -383,6 +385,18 @@
                                 appModel.deploymentDetail().deployableCountriesList.forEach(function (stat) {
                                     appModel.selectedDeployableCountries().push(stat)
                                 })
+                            } else if(!isAllChecked && appModel.isAllSelected) {
+                                appModel.isAllSelected = false;
+                                while (selected.length > 0) {
+                                    appModel.selectedDeployableCountries().pop()
+                                }
+                            } else if(isAllChecked && selected.length !== appModel.deploymentDetail().deployableCountriesList.length) {
+                                var index = appModel.selectedDeployableCountries().findIndex(function(country){
+                                    return country === 'All'
+                                });
+                                appModel.selectedDeployableCountries().splice(index, 1);
+                                appModel.isAllSelected = false;
+
                             }
                         }
                         appModel.isDeployable(appModel.canDeploy());
