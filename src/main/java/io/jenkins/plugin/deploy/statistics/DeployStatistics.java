@@ -1,6 +1,7 @@
 package io.jenkins.plugin.deploy.statistics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hudson.model.Action;
 import hudson.model.Item;
 import hudson.model.Run;
 import hudson.util.RunList;
@@ -11,7 +12,6 @@ import io.jenkins.plugin.deploy.statistics.model.DeploymentDetails;
 import io.jenkins.plugin.deploy.statistics.model.Environment;
 import io.jenkins.plugin.deploy.statistics.model.Project;
 import jenkins.model.Jenkins;
-import jenkins.model.RunAction2;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -32,14 +32,14 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 
-public class DeployStatistics implements RunAction2 {
+public class DeployStatistics implements Action {
 
     public static final String TMO = "TMO";
     public static final String TMW = "TMW";
     public static final int MAX_NUMBER_OF_BRANCHES = 50;
     private WorkflowJob project;
     private String selectedEnv;
-    private Run run;
+    private transient Run run;
 
     public DeployStatistics(WorkflowJob project) {
         this.project = project;
@@ -274,19 +274,9 @@ public class DeployStatistics implements RunAction2 {
         return "stats";
     }
 
-    @Override
-    public void onAttached(Run<?, ?> run) {
-        this.run = run;
-        System.out.println("onAttached" + run.toString());
-    }
-
-    @Override
-    public void onLoad(Run<?, ?> run) {
-        this.run = run;
-        System.out.println("onLoad" + run.toString());
-    }
-
     public Run<?,?> getRun() {
         return this.run;
     }
+
+
 }
