@@ -1,0 +1,96 @@
+#history {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#history th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #d1e784;
+    color: #092834;
+}
+
+#history th.previous {
+    background-color: #e1efad;
+    color: black;
+}
+
+#history th.country_heading {
+    background-color: #F0F7D4;
+    color: black;
+}
+
+.current {
+    background-color: #d1e784;
+    color: #092834;
+}
+
+.country {
+    background-color: #F0F7D4;
+    color: #black;
+}
+
+.modal-header {
+    background-color: #B2D732;
+    color: #black;
+}
+
+.modal-table {
+    background-color: #F0F7D4;
+    color: #black;
+    width: 100%;
+}
+
+.previous {
+    background-color: #e1efad;
+    color: black;
+}
+
+#history > tbody > tr:hover td {
+    background-color: #B2D732!important;
+    color: black;
+}
+
+#history_modal > thead > tr > th {
+    text-align: left;
+}
+
+#history_modal > tbody > tr:hover {
+    background-color: #B2D732;
+    color: black;
+}
+
+.nav_bar {
+    color: #F0F7D4!important;
+    background-color: #092834!important;
+
+}
+
+.nav_bar_selected {
+    color: black!important;
+    background-color: #B2D732!important;
+
+}
+
+.action-item {
+    color: #black!important;
+    background-color: #B2D732!important;
+}
+
+.sub-item {
+    color: #black!important;
+    background-color: #d1e784!important;
+}
+
+.card-footer {
+    padding-bottom: 1em;
+}
+
+.card-background {
+    background-color: #f0f7d6;
+}
+
+.page {
+    background-color: #fafdf3;
+}
