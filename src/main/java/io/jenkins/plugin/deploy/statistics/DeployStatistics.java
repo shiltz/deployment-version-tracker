@@ -186,12 +186,12 @@ public class DeployStatistics implements Action {
          */
         Item item = Jenkins.getInstance().getItemByFullName(buildJobName);
 
-        HashMap<String, Set<String>> branchArtifactMap = new HashMap<>();
+        HashMap<String, TreeSet<String>> branchArtifactMap = new HashMap<>();
         List<Environment> environments = getEnvironments();
         environments.forEach(environment -> {
             environment.getCountries().forEach(country -> {
                 country.getDeploymentStats().forEach(countryDeploymentStats -> {
-                    Set<String> artifacts = branchArtifactMap.get(countryDeploymentStats.getBranchName());
+                    TreeSet<String> artifacts = branchArtifactMap.get(countryDeploymentStats.getBranchName());
                     if(artifacts != null && artifacts.size() > 0 ){
                         artifacts.add(countryDeploymentStats.getArtifactVersion());
                     } else {
@@ -204,7 +204,7 @@ public class DeployStatistics implements Action {
         });
         List<Deployable>  deployables2 = new ArrayList<>();
         branchArtifactMap.keySet().forEach(branch -> {
-            deployables2.add(new Deployable(branch, new ArrayList<>(), new ArrayList<>(branchArtifactMap.get(branch))));
+            deployables2.add(new Deployable(branch, new ArrayList<>(), new ArrayList<>(branchArtifactMap.get(branch).descendingSet())));
         });
 
 
