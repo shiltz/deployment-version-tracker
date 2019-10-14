@@ -43,8 +43,10 @@ function AppViewModel() {
         if(event){
             if(appModel.releaseType() === 'new'){
                 appModel.availableBuilds(event.availableBuilds);
+                appModel.selectedBuild(undefined);
             } else {
                 appModel.availableArtifacts(event.availableArtifacts);
+                appModel.selectedArtifact(undefined);
             }
             appModel.isDeployable(appModel.canDeploy());
         }

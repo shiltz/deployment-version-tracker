@@ -154,7 +154,7 @@ public class DeployStatistics implements Action {
             deploymentDetails.setAppName("tmw");
             buildJobName = "Trade Management Workflow (TMW)/Trade Management Workflow";
         } else {
-            deploymentDetails.setAppName("TRADEMANAGEMENT");
+            deploymentDetails.setAppName("trade-backend");
             buildJobName = "Trade Management Backend/TM Backend - Builds Latest";
         }
 
