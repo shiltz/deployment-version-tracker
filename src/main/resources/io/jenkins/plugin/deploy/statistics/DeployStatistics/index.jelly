@@ -152,14 +152,14 @@
                                 <h5>Select a build number</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <select id="build-list" class="w3-select w3-border" data-bind="options: $root.availableBuilds(), optionsCaption: 'Please choose...', value: selectedBuild">
+                                <select id="build-list" class="w3-select w3-border" data-bind="options: $root.availableBuilds(), optionsText: 'buildNumber', optionsCaption: 'Please choose...', value: selectedBuild">
                                 </select>
                             </div>
                             <div class="w3-panel w3-round sub-item">
                                 <h5>Enter a major version</h5>
                             </div>
                             <div class="w3-panel card-footer">
-                                <input class="w3-input w3-border" data-bind="textInput: majorVersion" name="majorVersion" type="text" placeholder="13, 14 or 15 etc."/>
+                                <input class="w3-input w3-border" data-bind="textInput: majorVersion, enable: deploymentDetail().appName !== 'trade-backend'" name="majorVersion" type="text" placeholder="13, 14 or 15 etc."/>
                             </div>
 
                             <div class="w3-panel w3-round sub-item">

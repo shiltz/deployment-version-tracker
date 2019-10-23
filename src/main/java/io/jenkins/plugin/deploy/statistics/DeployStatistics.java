@@ -5,6 +5,7 @@ import hudson.model.Action;
 import hudson.model.Item;
 import hudson.model.Run;
 import hudson.util.RunList;
+import io.jenkins.plugin.deploy.statistics.model.BuildInfo;
 import io.jenkins.plugin.deploy.statistics.model.CountryDeploymentStats;
 import io.jenkins.plugin.deploy.statistics.model.Deployable;
 import io.jenkins.plugin.deploy.statistics.model.DeploymentConfiguration;
@@ -12,6 +13,7 @@ import io.jenkins.plugin.deploy.statistics.model.DeploymentDetails;
 import io.jenkins.plugin.deploy.statistics.model.Environment;
 import io.jenkins.plugin.deploy.statistics.model.Project;
 import jenkins.model.Jenkins;
+import org.jenkinsci.plugins.workflow.cps.EnvActionImpl;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -27,7 +29,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -143,7 +144,7 @@ public class DeployStatistics implements Action {
         rsp.flushBuffer();
     }
 
-    public void doGetDeploymentDetails(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+    public void doGetDeploymentDetails(StaplerRequest req, StaplerResponse rsp) throws IOException {
         DeploymentDetails deploymentDetails = new DeploymentDetails();
         String buildJobName = "TMO MultiBranch/dev and sit jobs";
 
@@ -216,8 +217,20 @@ public class DeployStatistics implements Action {
                     RunList runList = o.getBuilds();
                     runList.forEach(o1 ->  builds.add(o1));
 
-                    List<String> collectBuild =  builds.stream().sorted(Comparator.comparingInt(o2 -> ((Run) (o2)).getNumber()).reversed())
-                    .map(o2 -> ((Run) (o2)).getNumber() + "")
+                    List<BuildInfo> collectBuild =  builds.stream().sorted(Comparator.comparingInt(o2 -> ((Run) (o2)).getNumber()).reversed())
+                    .map(o2 -> {
+                        try {
+                            EnvActionImpl action = ((Run) (o2)).getAction(EnvActionImpl.class);
+                            String artifact = "";
+                            if(action != null){
+                                artifact = action.getEnvironment().get("tag");
+                            }
+                            return new BuildInfo(((Run) (o2)).getNumber() + "", artifact);
+                        } catch (IOException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return new BuildInfo(((Run) (o2)).getNumber() + "", "");
+                    })
                     .limit(MAX_NUMBER_OF_BRANCHES)
                     .collect(Collectors.toList());
 

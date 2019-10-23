@@ -4,10 +4,10 @@ import java.util.List;
 
 public class Deployable {
     private String branchName;
-    private List<String> availableBuilds;
+    private List<BuildInfo> availableBuilds;
     private List<String> availableArtifacts;
 
-    public Deployable(String branchName, List<String> availableBuilds, List<String> availableArtifacts) {
+    public Deployable(String branchName, List<BuildInfo> availableBuilds, List<String> availableArtifacts) {
         this.branchName = branchName;
         this.availableBuilds = availableBuilds;
         this.availableArtifacts = availableArtifacts;
@@ -21,11 +21,11 @@ public class Deployable {
         this.branchName = branchName;
     }
 
-    public List<String> getAvailableBuilds() {
+    public List<BuildInfo> getAvailableBuilds() {
         return availableBuilds;
     }
 
-    public void setAvailableBuilds(List<String> availableBuilds) {
+    public void setAvailableBuilds(List<BuildInfo> availableBuilds) {
         this.availableBuilds = availableBuilds;
     }
 

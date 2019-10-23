@@ -57,6 +57,8 @@ function AppViewModel() {
             appModel.availableBuilds('');
             appModel.availableArtifacts('');
             appModel.selectedBranch('');
+            appModel.majorVersion('');
+            appModel.response(undefined);
             appModel.isDeployable(appModel.canDeploy());
         }
     });
@@ -68,6 +70,9 @@ function AppViewModel() {
     });
     this.selectedBuild = ko.observable('');
     this.selectedBuild.subscribe(function(event){
+        if(event){
+            appModel.majorVersion(event.associatedArtifact);
+        }
         appModel.isDeployable(appModel.canDeploy());
     });
     this.selectedArtifact = ko.observable('');
@@ -160,15 +165,17 @@ function AppViewModel() {
         var appNameParam = '&APP_NAME=' + appModel.deploymentDetail().appName;
         var urlParams = appModel.deploymentDetail().url + 'buildWithParameters?token=D6B973260A7C44E7AE4622EADC959B19&';
         if(appModel.releaseType() === 'new') {
-            buildNumberParam = 'BUILD_NUMBER=' + appModel.selectedBuild();
+            buildNumberParam = 'BUILD_NUMBER=' + appModel.selectedBuild().buildNumber;
             branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch().branchName);
             majorVersionParam = '&MAJOR_VERSION=' + appModel.majorVersion();
+            majorVersionParam += '&BUILD_TAG=' + appModel.majorVersion();
 
         } else if(appModel.releaseType() === 'promote') {
             var splitArtifact = appModel.selectedArtifact().split(".");
             buildNumberParam = 'BUILD_NUMBER=' + splitArtifact[1];
             branchNameParam = '&BRANCH_NAME=' + encodeURIComponent(appModel.selectedBranch().branchName);
             majorVersionParam = '&MAJOR_VERSION=' + splitArtifact[0];
+            majorVersionParam += '&BUILD_TAG=' + splitArtifact[0];
 
         } else {
             throw new Error('Unknown release type')
